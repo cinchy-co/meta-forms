@@ -1,6 +1,6 @@
 {
-  "authority": "<cinchy-domain>/idp",
-  "cinchyRootUrl": "<cinchy-domain>",
-  "clientId": "cinchy_meta_forms",
-  "redirectUri": "<cinchy-domain>/metaforms"
+  "authority": "https://cinchy.net/cinchysso",
+  "cinchyRootUrl": "https://cinchy.net",
+  "clientId": "angular-sample",
+  "redirectUri": "https://localhost:3000/"
 }

@@ -39,6 +39,7 @@ import { CalculatedDirective } from './fields/cinchy-form-calculated.directive';
 import { NumberDirective } from './fields/cinchy-form-number.directive';
 import { ChildFormDirective } from './fields/cinchy-child-form.directive';
 import { CinchyDynamicFormsComponent } from './cinchy-dynamic-forms.component';
+import { RichTextDirective } from './fields/cinchy-form-richtext.directive';
 //#endregion
 
 //#region Pipes for the forms
@@ -66,6 +67,7 @@ import { AceEditorModule } from 'ng2-ace-editor';
 import 'ace-builds/webpack-resolver';
 import { DatePipe } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxEditorModule } from 'ngx-editor';
 
 window['ace']['require'] = window['ace']['acequire'];
 
@@ -92,6 +94,7 @@ const CustomSelectOptions: INgxSelectOptions = { // Check the interface for more
     CalculatedDirective,
     NumberDirective,
     ChildFormDirective,
+    RichTextDirective,
     KeysPipe,
     CinchyDynamicFormsComponent,
     ChoiceDirective,
@@ -138,7 +141,8 @@ const CustomSelectOptions: INgxSelectOptions = { // Check the interface for more
     SharedModule,
     NgxMatSelectSearchModule,
     AceEditorModule,
-    NgbModule
+    NgbModule,
+    NgxEditorModule
   ],
   exports        : [CinchyDynamicFormsComponent],
   entryComponents: [ChildFormDirective, MessageDialogComponent],

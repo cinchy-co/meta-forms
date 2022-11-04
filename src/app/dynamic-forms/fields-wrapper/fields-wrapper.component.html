@@ -63,15 +63,22 @@
           (eventHandler)='eventOccurred.emit($event)'>
         </cinchy-link-multichoice>
 
+        <cinchy-richtext
+          *ngIf="(field.cinchyColumn.dataType == 'Text' && field.cinchyColumn.dataFormatType == 'Rich Text')"
+          (eventHandler)='eventOccurred.emit($event)'
+          [targetTableName]='field.cinchyColumn.tableName' [field]='field'
+          [fieldsWithErrors]="fieldsWithErrors">
+        </cinchy-richtext>
+
         <cinchy-textarea
-          *ngIf="(field.cinchyColumn.dataType == 'Text'&& field.cinchyColumn.textColumnMaxLength > 500)"
+          *ngIf="(field.cinchyColumn.dataType == 'Text' && field.cinchyColumn.dataFormatType != 'Rich Text' && field.cinchyColumn.textColumnMaxLength > 500)"
           (eventHandler)='eventOccurred.emit($event)'
           [targetTableName]='field.cinchyColumn.tableName' [field]='field'
           [fieldsWithErrors]="fieldsWithErrors">
         </cinchy-textarea>
 
         <cinchy-textbox
-          *ngIf="(field.cinchyColumn.dataType == 'Text' && field.cinchyColumn.textColumnMaxLength <= 500)"
+          *ngIf="(field.cinchyColumn.dataType == 'Text' && field.cinchyColumn.dataFormatType != 'Rich Text' && field.cinchyColumn.textColumnMaxLength <= 500)"
           [targetTableName]='field.cinchyColumn.tableName' [field]='field'
           [fieldsWithErrors]="fieldsWithErrors"
           (eventHandler)='eventOccurred.emit($event)'>
