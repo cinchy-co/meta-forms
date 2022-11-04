@@ -3,7 +3,8 @@ import {IEventCallback, EventCallback} from '../models/cinchy-event-callback.mod
 import {ResponseType} from '../enums/response-type.enum';
 import { ImageType } from '../enums/imageurl-type';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
-//import { Editor } from '@ngx ngx-editor';
+// import { Editor } from 'ngx-editor';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 //#region Cinchy Dynamic TextArea
 /**
@@ -14,40 +15,31 @@ import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
   selector: 'cinchy-richtext',
   template: `
     <div *ngIf="field.cinchyColumn.canView" class="full-width-element divMarginBottom">
-      // <div class="link-labels">
-      // <div>
-      //     <fa-icon [icon]="faAlignLeft"></fa-icon>
-      //  </div>
-      //  &nbsp;
-      //   <label class="cinchy-label" [title]="field.caption ? field.caption : ''">
-      //     {{field.label}}
-      //     {{field.cinchyColumn.isMandatory == true && (field.value == '' || field.value == null) ? '*' : ''}}
-      //   </label>
-      //   <mat-icon *ngIf="field.caption" class="info-icon"
-      //             ngbTooltip = "{{field.caption}}"
-      //             placement="auto"
-      //             container="body"
-      //             matTooltipClass="tool-tip-body"
-      //             matTooltipPosition="above">
-      //     info
-      //   </mat-icon>
-      // </div>
-      // <ng-container *ngIf="!field.cinchyColumn.isViewOnly && !isDisabled && field.cinchyColumn.canEdit">
-      //   <div class="NgxEditor__Wrapper">
-      //     <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-      //     <ngx-editor
-      //       [editor]="editor"
-      //       [ngModel]="field.value"
-      //       [disabled]="readonly"
-      //       [placeholder]="'Type here...'"
-      //       (ngModelChange)="callbackEvent(targetTableName, field.cinchyColumn.name, $event, 'value')"
-      //     ></ngx-editor>
-      //   </div>
-      //   <mat-error
-      //     *ngIf="showError && (field.cinchyColumn.isMandatory == true &&(field.value =='' || field.value == null))">
-      //     *{{field.label}} is Required.
-      //   </mat-error>
-      // </ng-container>
+      <div class="link-labels">
+      <div>
+          <fa-icon [icon]="faAlignLeft"></fa-icon>
+       </div>
+       &nbsp;
+        <label class="cinchy-label" [title]="field.caption ? field.caption : ''">
+          {{field.label}}
+          {{field.cinchyColumn.isMandatory == true && (field.value == '' || field.value == null) ? '*' : ''}}
+        </label>
+        <mat-icon *ngIf="field.caption" class="info-icon"
+                  ngbTooltip = "{{field.caption}}"
+                  placement="auto"
+                  container="body"
+                  matTooltipClass="tool-tip-body"
+                  matTooltipPosition="above">
+          info
+        </mat-icon>
+      </div>
+      <ng-container *ngIf="!field.cinchyColumn.isViewOnly && !isDisabled && field.cinchyColumn.canEdit">
+        <angular-editor [placeholder]="'Enter text here...'" [(ngModel)]="field.value" [config]="editorConfig" (blur)="callbackEvent(targetTableName, field.cinchyColumn.name, $event, 'value')"></angular-editor>
+        <mat-error
+          *ngIf="showError && (field.cinchyColumn.isMandatory == true &&(field.value =='' || field.value == null))">
+          *{{field.label}} is Required.
+        </mat-error>
+      </ng-container>
     </div>
   `,
 })
@@ -70,6 +62,7 @@ export class RichTextDirective implements AfterViewInit, OnInit, OnDestroy {
   faAlignLeft = faAlignLeft;
 
   //editor: Editor;
+  editorConfig: AngularEditorConfig;
   readonly: boolean;
   
   constructor() {
@@ -84,11 +77,70 @@ export class RichTextDirective implements AfterViewInit, OnInit, OnDestroy {
     this.showLinkUrl = this.field.cinchyColumn.dataFormatType === 'LinkUrl';
     this.showActualField = !this.showImage && !this.showLinkUrl;
 
-    this.editor = new Editor();
+    
+    this.readonly = this.field.cinchyColumn.canEdit === false || this.field.cinchyColumn.isViewOnly || this.isDisabled;
+    this.editorConfig = {
+      editable: !this.readonly,
+      spellcheck: true,
+      height: 'auto',
+      minHeight: '500px',
+      maxHeight: 'auto',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Enter text here...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [],
+      sanitize: true,
+      toolbarPosition: 'top',
+      toolbarHiddenButtons: [
+        ['bold', 'italic'],
+        ['fontSize']
+      ]
+    };
   }
 
   ngAfterViewInit() {
-
+    this.readonly = this.field.cinchyColumn.canEdit === false || this.field.cinchyColumn.isViewOnly || this.isDisabled;
+    this.editorConfig = {
+      editable: !this.readonly,
+      spellcheck: true,
+      height: 'auto',
+      minHeight: '500px',
+      maxHeight: 'auto',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Enter text here...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [],
+      sanitize: true,
+      toolbarPosition: 'top',
+      toolbarHiddenButtons: [
+        ['bold', 'italic'],
+        ['fontSize']
+      ]
+    };
     // if (this.isFormatted) {
     //   this.editor.getEditor().setOptions({
     //     showLineNumbers: true,
@@ -115,7 +167,7 @@ export class RichTextDirective implements AfterViewInit, OnInit, OnDestroy {
     //   this.editor.value = this.field.value;
       //if (this.field.cinchyColumn.canEdit === false || this.field.cinchyColumn.isViewOnly || this.isDisabled) {
         //this.editor.setReadOnly(true);
-        this.readonly = this.field.cinchyColumn.canEdit === false || this.field.cinchyColumn.isViewOnly || this.isDisabled;
+        
       //}
       // this.editor.getEditor().commands.addCommand({
       //   name: "showOtherCompletions",
@@ -128,7 +180,6 @@ export class RichTextDirective implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.editor.destroy();
   }
 
   //#region pass callback event to the project On blur

@@ -67,7 +67,9 @@ import { AceEditorModule } from 'ng2-ace-editor';
 import 'ace-builds/webpack-resolver';
 import { DatePipe } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgxEditorModule } from 'ngx-editor';
+//import { NgxEditorModule } from 'ngx-editor';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { HttpClientModule} from '@angular/common/http';
 
 window['ace']['require'] = window['ace']['acequire'];
 
@@ -142,7 +144,7 @@ const CustomSelectOptions: INgxSelectOptions = { // Check the interface for more
     NgxMatSelectSearchModule,
     AceEditorModule,
     NgbModule,
-    NgxEditorModule
+    HttpClientModule, AngularEditorModule
   ],
   exports        : [CinchyDynamicFormsComponent],
   entryComponents: [ChildFormDirective, MessageDialogComponent],

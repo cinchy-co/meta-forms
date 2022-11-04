@@ -258,7 +258,6 @@ export class FormHelperService {
 
       // Update the value of the child fields that are linked to a parent field (only for flattened child forms)
       if (form.childFieldsLinkedToColumnName != null) {
-        debugger;
         for (let parentColName in form.childFieldsLinkedToColumnName) {
 
           let linkedParentField = form.fieldsByColumnName[parentColName];
