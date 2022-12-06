@@ -1,6 +1,6 @@
 {
-  "authority": "http://localhost/cinchysso",
-  "cinchyRootUrl": "http://localhost/Cinchy",
+  "authority": "https://sandbox.cinchy.net/dev-aurora-2/sso",
+  "cinchyRootUrl": "https://sandbox.cinchy.net/dev-aurora-2",
   "clientId": "cinchy_meta_forms",
-  "redirectUri": "http://localhost:3000/"
+  "redirectUri": "https://sandbox.cinchy.net/dev-aurora-2"
 }
