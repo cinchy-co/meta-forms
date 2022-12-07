@@ -1,35 +1,39 @@
 .rich-text-wrapper {
-    border: 3px solid black;
+  border: 3px solid black;
 
-    .rich-text-element {
-        padding: 0 0.5rem;
+  .rich-text-element {
+    padding: 0 0.5rem;
 
-        .ProseMirror:focus-visible {
-            outline: none !important;
-        }
+    .ProseMirror:focus-visible {
+      outline: none !important;
     }
+  }
 
-    .toolbar {
-        border-bottom: 3px solid black;
-        margin: -1px;
+  .toolbar {
+    border-bottom: 3px solid black;
+    margin: -1px;
 
-        .toolbar-item {
-            background-color: transparent;
-            border: none;
+    .toolbar-item {
+      background-color: transparent;
+      border: none;
 
-            &:active,
-            &:focus,
-            &:hover {
-                background-color: rgba(0, 0, 0, 0.15);
-            }
+      &.active {
+        background-color: rgba(0, 0, 0, 0.15);
+      }
 
-            &:hover {
-                cursor: pointer;
-            }
+      &:active,
+      &:focus,
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.25);
+      }
 
-            fa-icon {
-                color: black;
-            }
-        }
+      &:hover {
+        cursor: pointer;
+      }
+
+      fa-icon {
+        color: black;
+      }
     }
+  }
 }

@@ -14,6 +14,7 @@ import {
   faCode,
   faHeading,
   faItalic,
+  faLink,
   faListOl,
   faListUl,
   faParagraph,
@@ -31,6 +32,8 @@ import { TiptapMarkType } from "../../enums/tiptap-mark-type.enum";
 import { EventCallback, IEventCallback } from "../../models/cinchy-event-callback.model";
 import { ResponseType } from "../../enums/response-type.enum";
 import { IFormField } from "../../models/cinchy-form-field.model";
+import { isNullOrUndefined } from "util";
+import { Transaction } from "prosemirror-state";
 
 
 @Component({
@@ -50,7 +53,7 @@ export class RichTextComponent implements OnDestroy, AfterViewInit {
 
   @Input() isDisabled: boolean = false;
 
-  @Input() useJson: boolean = false;
+  @Input() useJson: boolean = true;
 
   @Output() eventHandler = new EventEmitter<any>();
 
@@ -62,11 +65,28 @@ export class RichTextComponent implements OnDestroy, AfterViewInit {
 
   value: any;
 
+  activeMarks = {
+    bold: false,
+    code: false,
+    heading1: false,
+    heading2: false,
+    heading3: false,
+    heading4: false,
+    heading5: false,
+    italic: false,
+    link: false,
+    listOrdered: false,
+    listUnordered: false,
+    strike: false,
+    underline: false
+  };
+
   icons = {
     faBold: faBold,
     faCode: faCode,
     faHeading: faHeading,
     faItalic: faItalic,
+    faLink: faLink,
     faListOl: faListOl,
     faListUl: faListUl,
     faParagraph: faParagraph,
@@ -88,19 +108,49 @@ export class RichTextComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
 
+    let content: string | Object;
+
+    try {
+      content = ((this.field.value as string).includes(`"type":"doc"`)) ? JSON.parse(this.field.value ?? "{}") : this.field.value;
+    }
+    catch (error) {
+      content = this.field.value;
+    }
+
     if (this.canEdit) {
       this.editor = new Editor({
         element: this.richTextElement?.nativeElement,
         extensions: [
           StarterKit,
-          Link,
+          Link.extend({
+            inclusive: false
+          }),
           Underline
         ],
-        content: this.useJson ? JSON.parse(this.field.value ?? "{}") : this.field.value,
+        content: content,
         editable: true,
         onBlur: (event: any): void => {
 
           this.onBlur(event);
+        },
+        /**
+         * Update the state of the marks at the cursor position
+         */
+        onTransaction: (args: { editor: Editor, transaction: Transaction }): void => {
+
+          this.activeMarks.bold = this.editor?.isActive("bold");
+          this.activeMarks.code = this.editor?.isActive("code");
+          this.activeMarks.heading1 = this.editor?.isActive("heading", { level: 1 });
+          this.activeMarks.heading2 = this.editor?.isActive("heading", { level: 2 });
+          this.activeMarks.heading3 = this.editor?.isActive("heading", { level: 3 });
+          this.activeMarks.heading4 = this.editor?.isActive("heading", { level: 4 });
+          this.activeMarks.heading5 = this.editor?.isActive("heading", { level: 5 });
+          this.activeMarks.italic = this.editor?.isActive("italic");
+          this.activeMarks.link = this.editor?.isActive("link");
+          this.activeMarks.listOrdered = this.editor?.isActive("orderedList");
+          this.activeMarks.listUnordered = this.editor?.isActive("bulletList");
+          this.activeMarks.strike = this.editor?.isActive("strike");
+          this.activeMarks.underline = this.editor?.isActive("underline");
         },
         onUpdate: (): void => {
 
@@ -203,9 +253,18 @@ export class RichTextComponent implements OnDestroy, AfterViewInit {
   /**
    * Turns on or off bold text at the cursor location or for the selection
    */
-  toggleLink(text: string): void {
+  toggleLink(): void {
 
-    this.editor?.commands.toggleLink({ href: text, target: "_blank" });
+    if (this.activeMarks.link) {
+      this.editor?.commands.unsetLink();
+    }
+    else {
+      let href = prompt("Enter your URL for the link");
+
+      if (!isNullOrUndefined(href)) {
+        this.editor?.commands.toggleLink({ href: href, target: "_blank" });
+      }
+    }
   }
 
 
