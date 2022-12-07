@@ -1,7 +1,7 @@
 <div class="full-width-element divMarginBottom">
   <div class="link-labels">
     <div>
-      <fa-icon [icon]="icons.faParagraph"></fa-icon>
+      <fa-icon [icon]="icons.faAlignLeft"></fa-icon>
     </div>
     &nbsp;
     <label class="cinchy-label" [title]="field.caption || ''">
@@ -19,7 +19,7 @@
   </div>
 
   <ng-container *ngIf="canEdit">
-    <div class="rich-text-wrapper">
+    <div class="rich-text-wrapper form-control">
       <div class="toolbar">
         <button class="toolbar-item" [class.active]="activeMarks.bold" (click)="toggleMark(tiptapMarkType.Bold)" matTooltip="Bold">
           <fa-icon [icon]="icons.faBold"></fa-icon>
@@ -85,7 +85,9 @@
           <fa-icon [icon]="icons.faLink"></fa-icon>
         </button>
       </div>
-      <div #richTextElement class="rich-text-element"></div>
+      <div class="editor-wrapper" (click)="setFocus()">
+        <div #richTextElement class="rich-text-element"></div>
+      </div>
     </div>
   </ng-container>
   <ng-container *ngIf="field.cinchyColumn.canEdit === false || field.cinchyColumn.isViewOnly || isDisabled">

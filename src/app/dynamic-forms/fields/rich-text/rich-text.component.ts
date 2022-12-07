@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 
 import {
+  faAlignLeft,
   faBold,
   faCode,
   faHeading,
@@ -17,7 +18,6 @@ import {
   faLink,
   faListOl,
   faListUl,
-  faParagraph,
   faStrikethrough,
   faUnderline
 } from "@fortawesome/free-solid-svg-icons";
@@ -82,6 +82,7 @@ export class RichTextComponent implements OnDestroy, AfterViewInit {
   };
 
   icons = {
+    faAlignLeft: faAlignLeft,
     faBold: faBold,
     faCode: faCode,
     faHeading: faHeading,
@@ -89,7 +90,6 @@ export class RichTextComponent implements OnDestroy, AfterViewInit {
     faLink: faLink,
     faListOl: faListOl,
     faListUl: faListUl,
-    faParagraph: faParagraph,
     faStrikethrough: faStrikethrough,
     faUnderline: faUnderline
   };
