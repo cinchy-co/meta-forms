@@ -16,7 +16,7 @@ import * as moment from "moment";
 //#endregion
 @Component({
   selector: "cinchy-datetime",
-  template: "./datetime.component.html",
+  templateUrl: "./datetime.component.html",
   styleUrls: ["./datetime.component.scss"]
 })
 export class DatetimeComponent implements OnInit {
