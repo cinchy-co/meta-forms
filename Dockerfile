@@ -12,3 +12,8 @@ RUN chmod 666 /usr/src/app/dist/Meta-Forms-App-Experience/index.html
 FROM nginxinc/nginx-unprivileged:1.23.2-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /usr/src/app/dist/Meta-Forms-App-Experience /usr/share/nginx/html
+USER root
+# Removing busybox
+RUN rm /bin/busybox
+# Added user nonroot with userid 1000 
+USER 1000
