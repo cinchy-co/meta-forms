@@ -22,6 +22,8 @@ import { ToastrService } from "ngx-toastr";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
+import * as moment from "moment/moment";
+
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -711,18 +713,21 @@ export class PrintService {
       this.content.push({ columns: this._getLinkColumns(fieldCopy, "Open") });
     }
     else if (fieldCopy.cinchyColumn.dataType === "Date and Time") {
-      let stringDate = fieldCopy.value;
+      if (fieldCopy.value) {
+        const dateAsMoment = moment(fieldCopy.value);
 
-      try {
-        if (fieldCopy.value) {
-          stringDate = this._datePipe.transform(fieldCopy.value, "MMM/dd/yyyy")
+        if (dateAsMoment.isValid) {
+          this.content.push({
+            columns: this._getFieldColumns(fieldCopy, dateAsMoment.format(fieldCopy.cinchyColumn.displayFormat || "MM/DD/yyyy"))
+          });
         }
-      } catch (e) {
-        console.error("Error converting date:", fieldCopy.value)
-      }
 
-      this.content.push({ columns: this._getFieldColumns(fieldCopy, stringDate) });
-    } else {
+      }
+      else {
+        this.content.push({ columns: this._getFieldColumns(fieldCopy) });
+      }
+    }
+    else {
       this.content.push({ columns: this._getFieldColumns(fieldCopy) });
     }
   }
