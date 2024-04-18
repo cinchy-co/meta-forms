@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 import { DropdownDatasetService } from "../../service/cinchy-dropdown-dataset/cinchy-dropdown-dataset.service";
+import { NotificationService } from "../../../services/notification.service";
 
 import { DropdownOption } from "../../service/cinchy-dropdown-dataset/cinchy-dropdown-options";
 import { Form } from "../../models/cinchy-form.model";
@@ -26,6 +27,7 @@ import { IFieldChangedEvent } from "../../interface/field-changed-event";
 export class ChildFormComponent implements OnInit {
 
   constructor(
+    private _notificationService: NotificationService,
     public dialogRef: MatDialogRef<ChildFormComponent>,
     @Inject(MAT_DIALOG_DATA) public childFormData: {
       childForm: Form,
@@ -309,9 +311,7 @@ export class ChildFormComponent implements OnInit {
       this.dialogRef.close((!this.childFormData.presetValues || !this.childFormData.presetValues["Cinchy ID"]) ? -1 : this.childFormData.presetValues["Cinchy ID"]);
     }
     else {
-      // TODO: this should be a toast, which means that we'd need to either dynamically inject the ToastrService or create a
-      //       NotificationService with static functions to display this sort of thing
-      console.error("Child form was invalid:", formValidation.message);
+      this._notificationService.displayErrorMessage(`Child form was invalid: ${formValidation.message}`);
     }
   }
 }

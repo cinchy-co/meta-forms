@@ -41,14 +41,14 @@ export class TextboxComponent implements OnChanges, OnInit {
   @Input("fieldsWithErrors") set fieldsWithErrors(errorFields: any) {
 
     this.showError = coerceBooleanProperty(
-      errorFields?.find((item: string) => {
+      errorFields?.find((item: string): boolean => {
 
         return (item === this.field?.label);
       })
     );
   };
 
-  @Output() onChange = new EventEmitter<IFieldChangedEvent>();
+  @Output() onChange: EventEmitter<IFieldChangedEvent> = new EventEmitter<IFieldChangedEvent>();
 
 
   iframeHeightStyle: number = 300;
@@ -136,7 +136,7 @@ export class TextboxComponent implements OnChanges, OnInit {
   }
 
 
-  isValidHttpUrl(str: string) {
+  isValidHttpUrl(str: string): boolean {
 
     let url;
 

@@ -1,6 +1,5 @@
 import { Inject, Injectable, LOCALE_ID } from "@angular/core";
 import { coerceBooleanProperty } from "@angular/cdk/coercion";
-import { DatePipe } from "@angular/common";
 
 import { DataFormatType } from "../../enums/data-format-type.enum";
 
@@ -20,9 +19,9 @@ import { FormSection } from "../../models/cinchy-form-section.model";
 import { ILookupRecord } from "../../../models/lookup-record.model";
 
 import { AppStateService } from "../../../services/app-state.service";
+import { NotificationService } from "../../../services/notification.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
-import { ToastrService } from "ngx-toastr";
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
@@ -155,16 +154,15 @@ export class PrintService {
   constructor(
     private _appStateService: AppStateService,
     private _childFormService: ChildFormService,
-    private _datePipe: DatePipe,
-    private _spinner: NgxSpinnerService,
-    private _toastr: ToastrService,
+    private _notificationService: NotificationService,
+    private _spinnerService: NgxSpinnerService,
     @Inject(LOCALE_ID) public locale: string
   ) {}
 
 
   async generatePdf(form: Form, currentRow: ILookupRecord, settings: IExportSettings): Promise<void> {
 
-    await this._spinner.show();
+    await this._spinnerService.show();
 
     this.content = [
       {
@@ -180,15 +178,17 @@ export class PrintService {
     if (documentDefinition) {
       const fileName = currentRow?.label ? `${this._appStateService.formMetadata.formName}-${currentRow.label}.pdf` : `${this._appStateService.formMetadata.formName}.pdf`;
 
-      setTimeout(() => {
+      setTimeout(async (): Promise<void> => {
 
         pdfMake.createPdf(documentDefinition).download(fileName);
 
-        this._spinner.hide();
+        await this._spinnerService.hide();
       }, 300);
     }
     else {
-      this._toastr.warning("Nothing to print");
+      this._notificationService.displayWarningMessage("Nothing to print");
+
+      await this._spinnerService.hide();
     }
   }
 

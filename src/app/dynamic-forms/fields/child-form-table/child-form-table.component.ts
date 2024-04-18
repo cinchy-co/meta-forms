@@ -29,8 +29,7 @@ import { IQuery } from "../../models/cinchy-query.model";
 
 import { AppStateService } from "../../../services/app-state.service";
 import { ChildFormService } from "../../service/child-form/child-form.service";
-
-import { ToastrService } from "ngx-toastr";
+import { NotificationService } from "../../../services/notification.service";
 
 
 /**
@@ -100,7 +99,7 @@ export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
     private _childFormService: ChildFormService,
     private _cinchyService: CinchyService,
     private _dialog: MatDialog,
-    private _toastr: ToastrService,
+    private _notificationService: NotificationService
   ) {}
 
 
@@ -211,7 +210,9 @@ export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
   deleteRow(rowData: { [key: string]: any }): void {
 
     if (!rowData["Cinchy ID"]) {
-      this._toastr.error("You are attempting to delete a record without a proper ID. The data may be corrupted or configured incorrectly.");
+      this._notificationService.displayErrorMessage(
+        "You are attempting to delete a record without a proper ID. The data may be corrupted or configured incorrectly."
+      );
     }
     else {
       const dialogRef = this._dialog.open(
@@ -393,10 +394,7 @@ export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
 
     this.loadFieldKeysAndPopulateDisplayValues();
 
-    this._toastr.success(
-      "Record deleted successfully",
-      "Success"
-    );
+    this._notificationService.displaySuccessMessage("Record deleted successfully");
   }
 
 

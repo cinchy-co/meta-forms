@@ -50,7 +50,7 @@
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
-            "preserveSymlinks":  true,
+            "preserveSymlinks": true
           },
           "configurations": {
             "production": {

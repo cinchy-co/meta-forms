@@ -6,10 +6,10 @@ import { IQuery, Query } from "./cinchy-query.model";
 
 import { IAdditionalProperty } from "../interface/additional-property";
 import { IFindChildFormResponse } from "../interface/find-child-form-response";
+import { ITableEntitlements } from "../interface/table-entitlements";
 
 import { IFormSectionMetadata } from "../../models/form-section-metadata.model";
 import { ILookupRecord } from "../../models/lookup-record.model";
-import { ITableEntitlements } from "../interface/table-entitlements";
 
 import { DropdownDataset } from "../service/cinchy-dropdown-dataset/cinchy-dropdown-dataset";
 import { DropdownOption } from "../service/cinchy-dropdown-dataset/cinchy-dropdown-options";

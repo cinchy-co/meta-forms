@@ -20,7 +20,6 @@ import { AceEditorModule } from "ng2-ace-editor";
 import { FilterPipeModule } from "ngx-filter-pipe";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { NgxSpinnerModule } from "ngx-spinner";
-import { ToastrModule } from "ngx-toastr";
 
 import { CustomMaterialModule } from "../custom-material.module";
 import { SharedModule } from "../shared/shared.module";
@@ -104,12 +103,7 @@ window["ace"]["require"] = window["ace"]["acequire"];
     NgxSpinnerModule,
     ReactiveFormsModule,
     ScrollingModule,
-    SharedModule,
-    ToastrModule.forRoot({
-      timeOut          : 5000,
-      closeButton      : true,
-      preventDuplicates: true
-    })
+    SharedModule
   ],
   exports: [
     CinchyDynamicFormsComponent

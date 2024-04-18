@@ -38,6 +38,7 @@ import { AppStateService } from "../../../services/app-state.service";
 import { CinchyQueryService } from "../../../services/cinchy-query.service";
 import { ConfigService } from "../../../services/config.service";
 import { DialogService } from "../../../services/dialog.service";
+import { NotificationService } from "../../../services/notification.service";
 
 import { DropdownDatasetService } from "../../service/cinchy-dropdown-dataset/cinchy-dropdown-dataset.service";
 import { DropdownOption } from "../../service/cinchy-dropdown-dataset/cinchy-dropdown-options";
@@ -48,7 +49,6 @@ import { isNullOrUndefined } from "util";
 
 import { NumeralPipe } from "ngx-numeral";
 import { NgxSpinnerService } from "ngx-spinner";
-import { ToastrService } from "ngx-toastr";
 
 
 /**
@@ -184,8 +184,8 @@ export class LinkComponent implements OnChanges, OnInit {
     private _dialogService: DialogService,
     private _dropdownDatasetService: DropdownDatasetService,
     private _formHelperService: FormHelperService,
-    private _spinner: NgxSpinnerService,
-    private _toastr: ToastrService
+    private _notificationService: NotificationService,
+    private _spinnerService: NgxSpinnerService
   ) {}
 
 
@@ -449,29 +449,33 @@ export class LinkComponent implements OnChanges, OnInit {
 
     if ((event?.target as HTMLInputElement)?.files?.length) {
       if (this.form.rowId) {
-        const uploadUrl = this._configService.envConfig.cinchyRootUrl + this.field.cinchyColumn.uploadUrl.replace("@cinchyid", this.form.rowId.toString());
+        const uploadUrl: string = this._configService.envConfig.cinchyRootUrl +
+          this.field.cinchyColumn.uploadUrl.replace("@cinchyid", this.form.rowId.toString());
 
         this._cinchyQueryService.uploadFiles(Array.from((event.target as HTMLInputElement).files), uploadUrl).subscribe(
           {
-            next: () => {
+            next: (): void => {
 
-              this._toastr.success("File uploaded", "Success");
+              this._notificationService.displaySuccessMessage("File Uploaded");
+
               this.fileInput.nativeElement.value = "";
+
               this.getAndSetLatestFileValue();
             },
-            error: () => {
+            error: (): void => {
 
-              this._toastr.error("Could not upload the file", "Error");
+              this._notificationService.displayErrorMessage("Could not upload the file");
             }
           }
         );
       }
       else {
-        console.error("No rowId was provided, so attempting to upload the selected file will result in an error");
+        this._notificationService.displayErrorMessage("No rowId was provided, so attempting to upload the selected file will result in an error");
       }
     }
     else {
-      console.warn("The application attempted to upload an empty file set.");
+      this._notificationService.displayWarningMessage("The application attempted to upload an empty file set.");
+
       console.warn(event);
     }
   }
@@ -506,18 +510,19 @@ export class LinkComponent implements OnChanges, OnInit {
       }
     );
 
-    await this._spinner.hide();
+    await this._spinnerService.hide();
 
     newOptionDialogRef.afterClosed().subscribe(async (resultId: number): Promise<void> => {
 
       // This check only exists to confirm that the dialog was closed by a save operation. If it was cancelled
       // or closed by clicking the backdrop, it will be nullish
       if (resultId) {
-        await this._spinner.show();
+        await this._spinnerService.show();
 
+        // Errors to this function are captured internally, so we can assume that it will complete naturally
         await this._formHelperService.addOptionToLinkedTable(form);
 
-        await this._spinner.hide();
+        await this._spinnerService.hide();
       }
     });
   }

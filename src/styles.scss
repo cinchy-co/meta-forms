@@ -447,3 +447,24 @@ app-fields-wrapper {
   width:100%;
   border: 0;
 }
+
+.toast-container .ngx-toastr {
+  padding: 15px;
+  width: 360px;
+
+  &.toast-error {
+    background-image: none;
+  }
+
+  &.toast-info {
+    background-image: none;
+  }
+
+  &.toast-success {
+    background-image: none;
+  }
+
+  &.toast-warning {
+    background-image: none;
+  }
+}

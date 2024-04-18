@@ -15,6 +15,8 @@ import { AppStateService } from "../../services/app-state.service";
 import { DialogService } from "../../services/dialog.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import {NotificationService} from "../../services/notification.service";
+import {ErrorService} from "../../services/error.service";
 
 
 @Component({
@@ -48,8 +50,10 @@ export class SidenavComponent implements OnInit {
   constructor(
     private _appStateService: AppStateService,
     private _dialogService: DialogService,
+    private _errorService: ErrorService,
     private _formHelperService: FormHelperService,
-    private _spinner: NgxSpinnerService
+    private _notificationService: NotificationService,
+    private _spinnerService: NgxSpinnerService
   ) {}
 
 
@@ -109,18 +113,17 @@ export class SidenavComponent implements OnInit {
       }
     );
 
-    await this._spinner.hide();
-
     newOptionDialogRef.afterClosed().subscribe(async (resultId: number): Promise<void> => {
 
       // This check only exists to confirm that the dialog was closed by a save operation. If it was cancelled
       // or closed by clicking the backdrop, it will be nullish
       if (resultId) {
-        await this._spinner.show();
+        await this._spinnerService.show();
 
+        // Errors to this function are captured internally, so we can assume that it will complete naturally
         await this._formHelperService.addOptionToLinkedTable(form);
 
-        await this._spinner.hide();
+        await this._spinnerService.hide();
       }
     });
   }
