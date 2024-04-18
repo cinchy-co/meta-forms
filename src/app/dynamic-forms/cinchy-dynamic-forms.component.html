@@ -1,3 +1,6 @@
+<!-- DEBUG -->
+<pre>form.rowId: {{form?.rowId ?? "undefined"}}</pre>
+
 <form class="cinchy-dynamic-forms-wrapper">
   <div class="navigation-buttons form-header">
     <div class="flex-row ml-20">
@@ -31,11 +34,11 @@
           <mat-icon>add_circle</mat-icon>
           <span>Create</span>
         </button>
-        <button mat-menu-item [disabled]="!rowId" (click)="cloneFormData()">
+        <button mat-menu-item [disabled]="!form?.rowId" (click)="cloneFormData()">
           <mat-icon>content_copy</mat-icon>
           <span>Duplicate</span>
         </button>
-        <button mat-menu-item [disabled]="!rowId" (click)="copyWindowUrl()">
+        <button mat-menu-item [disabled]="!form?.rowId" (click)="copyWindowUrl()">
           <mat-icon>content_paste</mat-icon>
           <span>Copy link</span>
         </button>
@@ -49,7 +52,7 @@
         </a>
       </mat-menu>
 
-      <button type="button" mat-raised-button class="btnSave have-brand center-vertical-important" (click)="saveForm(form, rowId)" [disabled]="!enableSaveBtn">Save</button>
+      <button type="button" mat-raised-button class="btnSave have-brand center-vertical-important" (click)="saveForm(form)" [disabled]="!enableSaveBtn">Save</button>
     </div>
   </div>
 
