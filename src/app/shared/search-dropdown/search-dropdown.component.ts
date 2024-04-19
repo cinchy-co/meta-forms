@@ -15,8 +15,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  SimpleChanges,
-  ViewChild
+  SimpleChanges
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
