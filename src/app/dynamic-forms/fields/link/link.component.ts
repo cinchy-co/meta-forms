@@ -66,7 +66,6 @@ export class LinkComponent implements OnChanges, OnInit {
   @ViewChild("fileInput") fileInput: ElementRef;
   @ViewChild("t") public tooltip: NgbTooltip;
 
-  @Input() field: FormField;
   @Input() fieldIndex: number;
   @Input() form: Form;
   @Input() formFieldMetadataResult: any;
@@ -138,6 +137,12 @@ export class LinkComponent implements OnChanges, OnInit {
   get canEdit(): boolean {
 
     return (!this.isDisabled && this.field.cinchyColumn.canEdit && !this.field.cinchyColumn.isViewOnly);
+  }
+
+
+  get field(): FormField {
+
+    return this.form?.sections[this.sectionIndex]?.fields[this.fieldIndex];
   }
 
 
@@ -400,7 +405,7 @@ export class LinkComponent implements OnChanges, OnInit {
         this.filteredOptions = this._filter(this.autocompleteText);
 
         if (fromLinkedField) {
-          this._setValue();
+          this._setValue(true);
         }
       }
 

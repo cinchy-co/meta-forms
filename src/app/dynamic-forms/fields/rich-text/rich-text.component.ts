@@ -79,8 +79,6 @@ import { FormField } from "../../models/cinchy-form-field.model";
 })
 export class RichTextComponent implements AfterViewInit, OnDestroy {
 
-  @Input() field: FormField;
-
   @Input() fieldIndex: number;
 
   @Input() form: Form;
@@ -185,6 +183,12 @@ export class RichTextComponent implements AfterViewInit, OnDestroy {
   get canEdit(): boolean {
 
     return (!this.isDisabled && this.field.cinchyColumn.canEdit && !this.field.cinchyColumn.isViewOnly);
+  }
+
+
+  get field(): FormField {
+
+    return this.form?.sections[this.sectionIndex]?.fields[this.fieldIndex];
   }
 
 

@@ -47,9 +47,10 @@ import { NotificationService } from "../../../services/notification.service";
 })
 export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
 
-  @Input() field: FormField;
   @Input() fieldIndex: number;
+
   @Input() form: Form;
+
   @Input() sectionIndex: number;
 
   @Output() childFormOpened = new EventEmitter<{
@@ -57,10 +58,12 @@ export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
     presetValues?: { [key: string]: any },
     title: string
   }>();
+
   @Output() childRowDeleted = new EventEmitter<{
     childForm: Form,
     rowId: number
   }>();
+
 
   fieldSet: Array<FormField> = new Array<FormField>();
   fieldKeys: Array<string> = new Array<string>();
@@ -91,6 +94,12 @@ export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
   get childForm(): Form {
 
     return this.form.sections[this.sectionIndex]?.fields[this.fieldIndex]?.childForm;
+  }
+
+
+  get field(): FormField {
+
+    return this.form?.sections[this.sectionIndex]?.fields[this.fieldIndex];
   }
 
 

@@ -27,7 +27,6 @@ import { faListUl } from "@fortawesome/free-solid-svg-icons";
 })
 export class ChoiceComponent implements OnChanges, OnInit {
 
-  @Input() field: FormField;
   @Input() fieldIndex: number;
   @Input() form: Form;
   @Input() isDisabled: boolean;
@@ -56,6 +55,12 @@ export class ChoiceComponent implements OnChanges, OnInit {
   get canEdit(): boolean {
 
     return (!this.isDisabled && this.field.cinchyColumn.canEdit && !this.field.cinchyColumn.isViewOnly);
+  }
+
+
+  get field(): FormField {
+
+    return this.form?.sections[this.sectionIndex]?.fields[this.fieldIndex];
   }
 
 

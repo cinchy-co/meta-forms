@@ -19,7 +19,6 @@ import { faFile } from "@fortawesome/free-regular-svg-icons";
 })
 export class AttachFileComponent implements OnInit {
 
-  @Input() field: FormField;
   @Input() fieldIndex: number;
   @Input() sectionIndex: number;
   @Input() form: Form;
@@ -43,6 +42,12 @@ export class AttachFileComponent implements OnInit {
   showError: boolean;
 
   faFile = faFile;
+
+
+  get field(): FormField {
+
+    return this.form?.sections[this.sectionIndex]?.fields[this.fieldIndex];
+  }
 
 
   ngOnInit(): void {

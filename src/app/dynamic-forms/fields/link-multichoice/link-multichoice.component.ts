@@ -56,7 +56,6 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
   @ViewChild("multiSelect", {static: true}) multiSelect: MatSelect;
   @ViewChild("t") public tooltip: NgbTooltip;
 
-  @Input() field: FormField;
   @Input() fieldIndex: number;
   @Input() form: Form;
   @Input() isInChildForm: boolean;
@@ -107,6 +106,12 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
   get canEdit(): boolean {
 
     return (!this.isDisabled && this.field.cinchyColumn.canEdit && !this.field.cinchyColumn.isViewOnly);
+  }
+
+
+  get field(): FormField {
+
+    return this.form?.sections[this.sectionIndex]?.fields[this.fieldIndex];
   }
 
 

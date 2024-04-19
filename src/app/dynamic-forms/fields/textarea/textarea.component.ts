@@ -34,7 +34,6 @@ export class TextareaComponent implements AfterViewInit, OnChanges, OnInit {
 
   @ViewChild("editor") editor;
 
-  @Input() field: FormField;
   @Input() fieldIndex: number;
   @Input() form: Form;
   @Input() targetTableName: string;
@@ -72,6 +71,12 @@ export class TextareaComponent implements AfterViewInit, OnChanges, OnInit {
   get canEdit(): boolean {
 
     return (!this.isDisabled && this.field.cinchyColumn.canEdit && !this.field.cinchyColumn.isViewOnly);
+  }
+
+
+  get field(): FormField {
+
+    return this.form?.sections[this.sectionIndex]?.fields[this.fieldIndex];
   }
 
 
