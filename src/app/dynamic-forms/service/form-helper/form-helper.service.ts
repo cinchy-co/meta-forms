@@ -334,7 +334,12 @@ export class FormHelperService {
         }
       }
 
-      form.fieldsByColumnName = parentFieldsByColumn;
+      form.updateRootProperty(
+        {
+          propertyName: "fieldsByColumnName",
+          propertyValue: parentFieldsByColumn
+        }
+      );
 
       // TODO: this should be a forEach
       for (let i: number = 0; i < allChildForms.length; i++) {
@@ -362,7 +367,12 @@ export class FormHelperService {
         }
       }
 
-      form.childFieldsLinkedToColumnName = parentChildLinkedColumns;
+      form.updateRootProperty(
+        {
+          propertyName: "childFieldsLinkedToColumnName",
+          propertyValue: parentChildLinkedColumns
+        }
+      );
     }
   }
 
