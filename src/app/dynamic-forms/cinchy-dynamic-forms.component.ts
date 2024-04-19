@@ -225,6 +225,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
     this._pendingChildFormQueries = new Array<IChildFormQuery>();
 
     this.form.restoreFormReferenceOnAllFields();
+
     this._appStateService.setRecordSelected(null, true);
 
     this._notificationService.displayInfoMessage(
@@ -687,26 +688,26 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
           if (insertQuery.query) {
             this._cinchyService.executeCsql(insertQuery.query, insertQuery.params).subscribe(
               {
-                next: (response: {
-                  queryResult: Cinchy.QueryResult,
-                  callbackState?: any
-                }): void => {
+                next: (
+                  response: {
+                    queryResult: Cinchy.QueryResult,
+                    callbackState?: any
+                  }
+                ): void => {
 
                   this._spinnerService.hide();
 
                   if (!this.form.rowId) {
                     // Technically this will also be done by the setRecordSelected handlers, but by doing it manually now we can use this immediately and won't
                     // need to wait for it to propagate
-                    this.form.rowId = response.queryResult._jsonResult.data[0][0];
+                    formData.updateRootProperty(
+                      {
+                        propertyName: "rowId",
+                        propertyValue: this.form.rowId
+                      }
+                    );
 
-                  formData.updateRootProperty(
-                    {
-                      propertyName: "rowId",
-                      propertyValue: this.form.rowId
-                    }
-                  );
-
-                  this._appStateService.setRecordSelected(this.form.rowId, true);
+                    this._appStateService.setRecordSelected(this.form.rowId, true);
 
                     if (this.form.isClone) {
                       this.form = this.form.clone(null, true);
