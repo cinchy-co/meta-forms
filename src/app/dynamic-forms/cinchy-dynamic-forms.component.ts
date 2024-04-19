@@ -777,7 +777,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
       this.currentRow = this.lookupRecordsList?.find(
         (lookupRecord: ILookupRecord): boolean => {
 
-          return (lookupRecord.id === this.form.rowId);
+          return (lookupRecord.id === this.form?.rowId);
         }
       ) ?? this.currentRow ?? null;
     }
