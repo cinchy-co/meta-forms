@@ -148,7 +148,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
       }
 
       if (!this.formHasDataLoaded) {
-        await this.loadForm();
+        await this.loadForm(this.form?.rowId);
       }
     }
   }
@@ -352,12 +352,12 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
    * Gets called upon load, save, and row changes
    */
   async loadForm(
+      rowId: number,
       childData?: {
         childForm: Form,
         presetValues?: { [key: string]: any },
         title: string
       },
-      rowId?: number
   ): Promise<void> {
 
     if (!this._formIsLoading) {
@@ -380,7 +380,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
 
         this.canInsert = tableEntitlements.canAddRows;
 
-        const form: Form = await this._formHelperService.generateForm(this.formMetadata, rowId || this.form?.rowId, tableEntitlements);
+        const form: Form = await this._formHelperService.generateForm(this.formMetadata, rowId, tableEntitlements);
 
         form.populateSectionsFromFormMetadata(this.formSectionsMetadata);
 
@@ -613,7 +613,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
   async saveChildForm(rowId: number, recursionCounter: number): Promise<void> {
 
     if (!this._pendingChildFormQueries.length && !isNullOrUndefined(rowId)) {
-      await this.loadForm();
+      await this.loadForm(this.form?.rowId);
     }
     else if (this._pendingChildFormQueries.length > recursionCounter) {
       await this._spinnerService.show();
@@ -637,7 +637,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
               if (this._pendingChildFormQueries.length === (recursionCounter + 1)) {
                 this._pendingChildFormQueries = new Array<IChildFormQuery>();
 
-                await this.loadForm();
+                await this.loadForm(this.form?.rowId);
 
                 this._notificationService.displaySuccessMessage("Child form saved successfully");
               }
@@ -703,7 +703,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
                     formData.updateRootProperty(
                       {
                         propertyName: "rowId",
-                        propertyValue: this.form.rowId
+                        propertyValue: response.queryResult._jsonResult.data[0][0]
                       }
                     );
 
@@ -786,7 +786,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
     }
 
     if (!record?.doNotReloadForm) {
-      await this.loadForm(undefined, record.rowId);
+      await this.loadForm(record.rowId);
     }
   }
 
@@ -814,7 +814,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
       await this._spinnerService.hide();
 
       if (!!this.form.rowId && childData) {
-        await this.loadForm(childData);
+        await this.loadForm(this.form?.rowId, childData);
       }
 
       if (!response) {

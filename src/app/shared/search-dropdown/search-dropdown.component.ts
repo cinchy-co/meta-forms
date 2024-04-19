@@ -89,9 +89,6 @@ export class SearchDropdownComponent implements AfterViewInit, OnChanges, OnDest
   }
 
 
-  constructor() {}
-
-
   ngAfterViewInit() {
 
     // listen for search field value changes
@@ -112,7 +109,6 @@ export class SearchDropdownComponent implements AfterViewInit, OnChanges, OnDest
   ngOnChanges(changes: SimpleChanges): void {
 
     if (changes.items) {
-
       this.setDisplayItems();
     }
   }
