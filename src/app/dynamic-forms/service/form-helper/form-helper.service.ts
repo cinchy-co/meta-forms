@@ -118,9 +118,26 @@ export class FormHelperService {
       childFormSort
     );
 
-    result.tableMetadata = JSON.parse(formMetadata.tableJson);
-    result.parentForm = parentForm
-    result.rowId = rowId;
+    result.updateRootProperty(
+      {
+        propertyName: "tableMetadata",
+        propertyValue: JSON.parse(formMetadata.tableJson)
+      }
+    );
+
+    result.updateRootProperty(
+      {
+        propertyName: "parentForm",
+        propertyValue: parentForm
+      }
+    );
+
+    result.updateRootProperty(
+      {
+        propertyName: "rowId",
+        propertyValue: rowId
+      }
+    );
 
     return result;
   }

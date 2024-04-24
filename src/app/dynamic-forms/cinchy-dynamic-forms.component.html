@@ -9,8 +9,8 @@
         </span>
       </a>
 
-      <app-search-dropdown #recordDropdown *ngIf="lookupRecordsList?.length"
-                           [items]="lookupRecordsList"
+      <app-search-dropdown #recordDropdown *ngIf="lookupRecords?.length"
+                           [items]="lookupRecords"
                            [selectedOption]="currentRow"
                            (dropdownClicked)="rowSelected($event)"
                            (onFilter)="handleOnFilter($event)">

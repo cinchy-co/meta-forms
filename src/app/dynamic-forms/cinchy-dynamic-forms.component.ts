@@ -3,10 +3,8 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild,
   ViewEncapsulation
 } from "@angular/core";
@@ -50,6 +48,7 @@ import { FormHelperService } from "./service/form-helper/form-helper.service";
 import { PrintService } from "./service/print/print.service";
 
 import { SearchDropdownComponent } from "../shared/search-dropdown/search-dropdown.component";
+import {takeUntil} from "rxjs/operators";
 
 
 @Component({
@@ -58,7 +57,7 @@ import { SearchDropdownComponent } from "../shared/search-dropdown/search-dropdo
   styleUrls: ["./style/style.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
+export class CinchyDynamicFormsComponent implements OnInit {
 
   @HostListener("window:beforeunload", ["$event"])
   beforeUnloadHandler($event) {
@@ -74,29 +73,31 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
   @Input() formMetadata: IFormMetadata;
   @Input() formSectionsMetadata: Array<IFormSectionMetadata>;
 
-  @Input("lookupRecords") set lookupRecords(value: Array<ILookupRecord>) {
-
-    this.setLookupRecords(value);
-  }
-
   @Output() closeAddNewDialog = new EventEmitter<INewEntityDialogResponse>();
   @Output() onLookupRecordFilter: EventEmitter<string> = new EventEmitter<string>();
 
 
-  form: Form = null;
-  fieldsWithErrors: Array<any>;
-  lookupRecordsList: ILookupRecord[];
   currentRow: ILookupRecord;
 
+  form: Form = null;
+
+  fieldsWithErrors: Array<any>;
+
+  // Initialize with a loading state in case the first load takes some time
+  lookupRecords: Array<ILookupRecord> = [{ id: -1, label: "Loading..." }];
+
   canInsert: boolean;
+
   enableSaveBtn: boolean = false;
+
   filteredTableUrl: string;
+
   formHasDataLoaded: boolean = false;
 
 
   get lookupRecordsListPopulated(): boolean {
 
-    return (this.lookupRecordsList?.length && this.lookupRecordsList[0].id !== -1);
+    return (this.lookupRecords?.length && this.lookupRecords[0].id !== -1);
   }
 
   /**
@@ -139,25 +140,9 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
   ) {}
 
 
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
-
-    if (changes.lookupRecords?.currentValue?.length) {
-      if (this._queuedRecordSelection) {
-        this._handleRecordSelection(this._queuedRecordSelection);
-        this._queuedRecordSelection = null;
-      }
-
-      if (!this.formHasDataLoaded) {
-        await this.loadForm(this.form?.rowId);
-      }
-    }
-  }
-
-
   ngOnInit(): void {
 
-    // Initialize with a loading state in case the first load takes some time
-    this.lookupRecordsList = [{ id: -1, label: "Loading..." }];
+    this._loadLookupRecords("", this.form?.rowId);
 
     this._appStateService.onRecordSelected$.subscribe(
       (record: { rowId: number | null, doNotReloadForm: boolean }): void => {
@@ -207,7 +192,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
   }
 
 
-  checkNoRecord(lookupRecords: ILookupRecord[]): ILookupRecord[] {
+  checkNoRecord(lookupRecords: Array<ILookupRecord>): Array<ILookupRecord> {
 
     if (lookupRecords?.length > 0) {
       return lookupRecords;
@@ -343,7 +328,18 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
    */
   handleOnFilter(filterText: string): void {
 
-    this.onLookupRecordFilter.emit(filterText);
+    let resolvedFilter: string = (
+      filterText ?
+        `LOWER(CAST([${this.formMetadata.subTitleColumn ?? "Cinchy ID"}] as nvarchar(MAX))) LIKE LOWER('%${filterText}%')` :
+        null
+    );
+
+    // Ensure that if there is a default filter on the field, it is not lost
+    if (resolvedFilter && this.formMetadata.lookupFilter) {
+      resolvedFilter += ` AND ${this.formMetadata.lookupFilter}`;
+    }
+
+    this._loadLookupRecords(resolvedFilter ?? this.formMetadata.lookupFilter);
   }
 
 
@@ -384,32 +380,25 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
 
         form.populateSectionsFromFormMetadata(this.formSectionsMetadata);
 
-        this._cinchyQueryService.getFormFieldsMetadata(this.formId).subscribe(
+        this._cinchyQueryService.getFormFieldsMetadata(form.id).subscribe(
           {
             next: async (formFieldsMetadata: Array<IFormFieldMetadata>): Promise<void> => {
 
               if (this.lookupRecordsListPopulated) {
-                const selectedLookupRecord = this.lookupRecordsList.find(
-                  (record: ILookupRecord): boolean => {
-
-                    return (record.id === form.rowId);
-                  }
-                );
-
                 await this._formHelperService.fillWithFields(
                   form,
                   form.rowId,
                   this.formMetadata,
                   formFieldsMetadata,
-                  selectedLookupRecord,
+                  this.currentRow,
                   tableEntitlements
                 );
 
-                if (selectedLookupRecord){
+                if (this.currentRow){
                   const success: boolean = await this._formHelperService.fillWithData(
                     form,
                     form.rowId,
-                    selectedLookupRecord,
+                    this.currentRow,
                     null,
                     null
                   );
@@ -688,14 +677,14 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
           if (insertQuery.query) {
             this._cinchyService.executeCsql(insertQuery.query, insertQuery.params).subscribe(
               {
-                next: (
+                next: async (
                   response: {
                     queryResult: Cinchy.QueryResult,
                     callbackState?: any
                   }
-                ): void => {
+                ): Promise<void> => {
 
-                  this._spinnerService.hide();
+                  await this._spinnerService.hide();
 
                   if (!this.form.rowId) {
                     // Technically this will also be done by the setRecordSelected handlers, but by doing it manually now we can use this immediately and won't
@@ -707,7 +696,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
                       }
                     );
 
-                    this._appStateService.setRecordSelected(this.form.rowId, true);
+                    this._loadLookupRecords("", this.form.rowId);
 
                     if (this.form.isClone) {
                       this.form = this.form.clone(null, true);
@@ -716,7 +705,7 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
                     }
                   }
 
-                  this._saveMethodLogic(response, childData);
+                  await this._saveMethodLogic(response, childData);
                   this._updateFileAndSaveFileNames(insertQuery.attachedFilesInfo);
 
                   this._notificationService.displaySuccessMessage("Data Saved Successfully");
@@ -760,24 +749,16 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
   }
 
 
-  setLookupRecords(lookupRecords: ILookupRecord[]): void {
-
-    this.lookupRecordsList = this.checkNoRecord(lookupRecords);
-  }
-
-
   /**
    * Ingests the selected record and populates the form accordingly
    */
   private async _handleRecordSelection(record: { rowId: number | null, doNotReloadForm: boolean }): Promise<void> {
 
     if (record.rowId) {
-      this.setLookupRecords(this.lookupRecordsList);
-
-      this.currentRow = this.lookupRecordsList?.find(
+      this.currentRow = this.lookupRecords?.find(
         (lookupRecord: ILookupRecord): boolean => {
 
-          return (lookupRecord.id === this.form?.rowId);
+          return (lookupRecord.id === record.rowId);
         }
       ) ?? this.currentRow ?? null;
     }
@@ -788,6 +769,48 @@ export class CinchyDynamicFormsComponent implements OnInit, OnChanges {
     if (!record?.doNotReloadForm) {
       await this.loadForm(record.rowId);
     }
+  }
+
+
+  private _loadLookupRecords(filter?: string, rowIdToSelect?: number, limitResults?: boolean): void {
+
+    this._cinchyQueryService.resetLookupRecords.next();
+
+    this._cinchyQueryService.getLookupRecords(
+      this.formMetadata.subTitleColumn,
+      this.formMetadata.domainName,
+      this.formMetadata.tableName,
+      filter ?? this.formMetadata.lookupFilter,
+      limitResults
+    ).pipe(
+      takeUntil(this._cinchyQueryService.resetLookupRecords)
+    ).subscribe(
+      {
+        next: async (response: Array<ILookupRecord>): Promise<void> => {
+
+          this.lookupRecords = this.checkNoRecord(response);
+
+          await this._handleRecordSelection(
+            this._queuedRecordSelection ??
+              { rowId: rowIdToSelect ?? this.form?.rowId, doNotReloadForm: true }
+          );
+
+          if (!this.formHasDataLoaded) {
+            await this.loadForm(this.form?.rowId);
+          }
+
+          this._queuedRecordSelection = null;
+        },
+        error: async (error: any): Promise<void> => {
+
+          await this._spinnerService.hide();
+
+          this._notificationService.displayErrorMessage(
+            `Error getting lookup records. ${ this._errorService.getErrorMessage(error) }`
+          );
+        }
+      }
+    );
   }
 
 

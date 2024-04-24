@@ -35,12 +35,10 @@
   </ng-template>
 
   <ng-template #mainContent>
-    <div class="form-container full-height-element" [ngStyle]="{ 'height': fullScreenHeight }" *ngIf="formSectionsMetadata && lookupRecords">
+    <div class="form-container full-height-element" [ngStyle]="{ 'height': fullScreenHeight }" *ngIf="formSectionsMetadata">
       <cinchy-dynamic-forms [formId]="formId"
                             [formMetadata]="formMetadata"
-                            [formSectionsMetadata]="formSectionsMetadata"
-                            [lookupRecords]="lookupRecords"
-                            (onLookupRecordFilter)="handleOnLookupRecordFilter($event)">
+                            [formSectionsMetadata]="formSectionsMetadata">
       </cinchy-dynamic-forms>
     </div>
   </ng-template>

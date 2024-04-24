@@ -121,10 +121,12 @@ export class AppStateService {
 
     this._rowId = rowId;
 
-    this.onRecordSelected$.next({
-      rowId: rowId,
-      doNotReloadForm: doNotReloadForm
-    });
+    this.onRecordSelected$.next(
+      {
+        rowId: rowId,
+        doNotReloadForm: doNotReloadForm
+      }
+    );
 
     if (rowId === null) {
       this.deleteRowIdInQueryParams();
