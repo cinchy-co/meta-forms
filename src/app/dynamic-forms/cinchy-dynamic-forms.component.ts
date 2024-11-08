@@ -798,7 +798,7 @@ export class CinchyDynamicFormsComponent implements OnInit {
 
     this._cinchyQueryService.getLookupRecords(
       this.formMetadata.subTitleColumn,
-      this.formMetadata.domainName,
+      this.formMetadata.dataProduct,
       this.formMetadata.tableName,
       filter ?? this.formMetadata.lookupFilter,
       limitResults
@@ -878,7 +878,7 @@ export class CinchyDynamicFormsComponent implements OnInit {
           const fileQuery: string = `
             UPDATE t
             SET t.[${fileDetails.column}] = @p0
-            FROM [${fileDetails.domain}].[${fileDetails.table}] t
+            FROM [${fileDetails.dataProduct}].[${fileDetails.table}] t
             WHERE t.[Cinchy ID] = ${childCinchyId ? childCinchyId : this.form?.rowId}
               AND t.[Deleted] IS NULL`;
 
@@ -897,7 +897,7 @@ export class CinchyDynamicFormsComponent implements OnInit {
         else {
           const query: string = `UPDATE t
                          SET t.[${fileDetails.column}] = @p0
-                         FROM [${fileDetails.domain}].[${fileDetails.table}] t
+                         FROM [${fileDetails.dataProduct}].[${fileDetails.table}] t
                          WHERE t.[Cinchy ID] = ${this.form?.rowId}
                           AND t.[Deleted] IS NULL;`;
 

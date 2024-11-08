@@ -114,7 +114,7 @@ export class Form {
     public readonly id: string,
     public readonly name: string,
     public readonly targetTableId: number,
-    public readonly targetTableDomain: string,
+    public readonly targetTableDataProduct: string,
     public readonly targetTableName: string,
     public readonly isAccordion: boolean,
     public readonly tableEntitlements: ITableEntitlements,
@@ -243,7 +243,7 @@ export class Form {
       overrideId ?? this.id,
       this.name,
       this.targetTableId,
-      this.targetTableDomain,
+      this.targetTableDataProduct,
       this.targetTableName,
       this.isAccordion,
       this.tableEntitlements,
@@ -364,7 +364,7 @@ export class Form {
 
     return new Query(
       `DELETE
-        FROM [${this.targetTableDomain}].[${this.targetTableName}]
+        FROM [${this.targetTableDataProduct}].[${this.targetTableName}]
         WHERE [Cinchy ID] = ${targetId ?? this.rowId}
           AND [Deleted] IS NULL`,
       null
@@ -490,14 +490,14 @@ export class Form {
 
         if (isNullOrUndefined(cinchyVersion) || cinchyVersion.startsWith("4.")) {
           queryString = `
-            INSERT INTO [${this.targetTableDomain}].[${this.targetTableName}] (${assignmentColumns.join(", ")})
+            INSERT INTO [${this.targetTableDataProduct}].[${this.targetTableName}] (${assignmentColumns.join(", ")})
               VALUES (${assignmentValues.join(", ")})
               SELECT @cinchy_row_id`;
         }
         else {
           queryString = `
             CREATE TABLE #tmp([id] int)
-              INSERT INTO [${this.targetTableDomain}].[${this.targetTableName}] (${assignmentColumns.join(", ")})
+              INSERT INTO [${this.targetTableDataProduct}].[${this.targetTableName}] (${assignmentColumns.join(", ")})
               OUTPUT INSERTED.[Cinchy ID] INTO #tmp ([id])
               VALUES (${assignmentValues.join(", ")})
               SELECT x.[id] AS 'id' FROM #tmp x`;
@@ -514,7 +514,7 @@ export class Form {
         query = new Query(
           `UPDATE t
             SET ${assignmentSetClauses.join(", ")}
-            FROM [${this.targetTableDomain}].[${this.targetTableName}] t
+            FROM [${this.targetTableDataProduct}].[${this.targetTableName}] t
             WHERE t.[Cinchy ID] = ${this.rowId}
               AND t.[Deleted] IS NULL
             SELECT ${this.rowId};`,
@@ -746,7 +746,7 @@ export class Form {
       //       this query will resolve and create the record in the child table, but it will not link that record back to the parent form
       if (!this.rowId) {
         query = new Query(
-          `INSERT INTO [${this.targetTableDomain}].[${this.targetTableName}] (${assignmentColumns.join(", ")})
+          `INSERT INTO [${this.targetTableDataProduct}].[${this.targetTableName}] (${assignmentColumns.join(", ")})
             VALUES (${assignmentValues.join(", ")}); SELECT 1;`,
           params,
           attachedFilesInfo
@@ -761,7 +761,7 @@ export class Form {
         query = new Query(
           `UPDATE t
             SET ${assignmentSetClauses.join(", ")}
-            FROM [${this.targetTableDomain}].[${this.targetTableName}] t
+            FROM [${this.targetTableDataProduct}].[${this.targetTableName}] t
             WHERE t.[Cinchy ID] = ${this.rowId}
               AND t.[Deleted] IS NULL;
             SELECT 1;`,
@@ -830,14 +830,14 @@ export class Form {
         const whereWithOrder = this.childFormSort ? `${whereConditionWithFilter} ${this.childFormSort}` : `${whereConditionWithFilter} Order by t.[Cinchy ID]`;
 
         return new Query(
-          `SELECT ${fields.join(",")} FROM [${this.targetTableDomain}].[${this.targetTableName}] t ${whereWithOrder}`,
+          `SELECT ${fields.join(",")} FROM [${this.targetTableDataProduct}].[${this.targetTableName}] t ${whereWithOrder}`,
           null,
           null
         );
     }
     else {
       return new Query(
-        `SELECT ${fields.join(",")} FROM [${this.targetTableDomain}].[${this.targetTableName}] t where t.[Cinchy ID] = ${rowId} and t.[Deleted] IS NULL Order by t.[Cinchy ID]`,
+        `SELECT ${fields.join(",")} FROM [${this.targetTableDataProduct}].[${this.targetTableName}] t where t.[Cinchy ID] = ${rowId} and t.[Deleted] IS NULL Order by t.[Cinchy ID]`,
         null
       );
     }
@@ -862,18 +862,18 @@ export class Form {
   getFileNameAndItsTable(field: FormField, childCinchyId?: number): {
       childCinchyId: number,
       column: string,
-      domain: string,
+      dataProduct: string,
       fileName: string,
       query: string,
       table: string,
       value: any
   } {
 
-    const [domain, table, column]: [string, string, string] = field.cinchyColumn.fileNameColumn?.split(".") ?? [];
-    const query = this.rowId ? `Insert into [${domain}].[${table}] ([Cinchy ID], [${field.cinchyColumn.name}]) values(@rowId, @fieldValue)` : null;
+    const [dataProduct, table, column]: [string, string, string] = field.cinchyColumn.fileNameColumn?.split(".") ?? [];
+    const query = this.rowId ? `Insert into [${dataProduct}].[${table}] ([Cinchy ID], [${field.cinchyColumn.name}]) values(@rowId, @fieldValue)` : null;
 
     return {
-      domain,
+      dataProduct,
       table,
       column,
       fileName: field.cinchyColumn.fileName,

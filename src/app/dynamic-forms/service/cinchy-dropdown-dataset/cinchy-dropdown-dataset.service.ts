@@ -55,9 +55,9 @@ export class DropdownDatasetService {
     // Get meta data for the cinchy link
     let tableColumnQuery: string = `
       SELECT
-        tc.[Table].[Domain].[Name] AS 'Domain',
-        tc.[Table].[Name] AS 'Table',
-        tc.[Name] AS 'Column'
+        tc.[Table].[Data Product].[Name] AS 'dataProduct',
+        tc.[Table].[Name] AS 'table',
+        tc.[Name] AS 'column'
       FROM [Cinchy].[Cinchy].[Table Columns] tc
       WHERE tc.[Deleted] IS NULL
         AND tc.[Table].[Deleted] IS NULL
@@ -71,12 +71,12 @@ export class DropdownDatasetService {
 
     let dataSetQuery: string;
 
-    if (metadataQueryResult[0]["Domain"] === "Reference Data" && metadataQueryResult[0]["Table"] === "Employees") {
+    if (metadataQueryResult[0]["dataProduct"] === "Reference Data" && metadataQueryResult[0]["table"] === "Employees") {
       dataSetQuery = `
         SELECT
           t.[Cinchy ID] AS 'Id',
-          t.[${metadataQueryResult[0]["Column"]}] + ' (\' + [Role].[Name] + \')' AS 'Label'
-        FROM [${metadataQueryResult[0]["Domain"]}].[${metadataQueryResult[0]["Table"]}] t
+          t.[${metadataQueryResult[0]["column"]}] + ' (\' + [Role].[Name] + \')' AS 'Label'
+        FROM [${metadataQueryResult[0]["dataProduct"]}].[${metadataQueryResult[0]["table"]}] t
         WHERE t.[Deleted] IS NULL`;
     }
     else {
@@ -98,16 +98,16 @@ export class DropdownDatasetService {
           SELECT
             ${setDisplayColumnQuery},
             [Cinchy ID] as 'Id',
-            [${metadataQueryResult[0]["Column"]}] as 'Label'
-          FROM [${metadataQueryResult[0]["Domain"]}].[${metadataQueryResult[0]["Table"]}]
+            [${metadataQueryResult[0]["column"]}] as 'Label'
+          FROM [${metadataQueryResult[0]["dataProduct"]}].[${metadataQueryResult[0]["table"]}]
           ${whereCondition};`;
       }
       else {
         dataSetQuery = `
           SELECT
             [Cinchy ID] AS 'Id',
-            [${metadataQueryResult[0]["Column"]}] AS 'Label'
-          FROM [${metadataQueryResult[0]["Domain"]}].[${metadataQueryResult[0]["Table"]}]
+            [${metadataQueryResult[0]["column"]}] AS 'Label'
+          FROM [${metadataQueryResult[0]["dataProduct"]}].[${metadataQueryResult[0]["table"]}]
           ${whereCondition};`;
       }
     }
@@ -174,7 +174,11 @@ export class DropdownDatasetService {
       }
       else {
         this._notificationService.displayErrorMessage(
+<<<<<<< HEAD
+          `Could not retrieve linked options for [${metadataQueryResult[0]["dataProduct"]}].[${metadataQueryResult[0]["table"]}]. ${this._errorService.getErrorMessage(error)}`
+=======
           `Could not retrieve linked options for [${metadataQueryResult[0]["Domain"]}].[${metadataQueryResult[0]["Table"]}]. ${this._errorService.getErrorMessage(error)}`
+>>>>>>> master
         );
       }
     }

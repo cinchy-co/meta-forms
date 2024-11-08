@@ -313,14 +313,14 @@ export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
 
   async getFileName(fileNameColumn: string, rowId: number): Promise<string> {
 
-    const [domain, table, column] = fileNameColumn?.split(".") ?? [];
+    const [dataProduct, table, column] = fileNameColumn?.split(".") ?? [];
 
-    if (domain) {
+    if (dataProduct) {
       const query = `
         SELECT
             [${column}] AS 'fullName',
             [Cinchy ID] AS 'id'
-          FROM [${domain}].[${table}]
+          FROM [${dataProduct}].[${table}]
           WHERE [Cinchy ID] = ${rowId}
             AND [Deleted] IS NULL`;
 
@@ -433,7 +433,7 @@ export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
    */
   private async _updateEntitlements(rowData?: { [key: string]: any }): Promise<void> {
 
-    const domainAndTable = `[${this.childForm.targetTableDomain}].[${this.childForm.targetTableName}]`;
+    const target = `[${this.childForm.targetTableDataProduct}].[${this.childForm.targetTableName}]`;
 
     const columnNames: Array<string> = this._childFormService.getFieldKeys(this.childForm).filter((key: string) => {
 
@@ -454,7 +454,7 @@ export class ChildFormTableComponent implements OnChanges, OnInit, OnDestroy {
     if ((rowData && rowData["Cinchy ID"] && rowData["Cinchy ID"] > 0)) {
       const entitlementQuery = `
           SELECT ${selectLabels.join(",")}
-            FROM ${domainAndTable} t
+            FROM ${target} t
             WHERE t.[Deleted] IS NULL
               AND t.[Cinchy ID]=${rowData["Cinchy ID"]}
             ORDER BY t.[Cinchy ID]`;

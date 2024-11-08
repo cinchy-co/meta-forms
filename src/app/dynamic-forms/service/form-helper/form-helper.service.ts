@@ -106,7 +106,7 @@ export class FormHelperService {
       formMetadata.formId,
       formMetadata.formName,
       formMetadata.tableId,
-      formMetadata.domainName,
+      formMetadata.dataProduct,
       formMetadata.tableName,
       formMetadata.isAccordion,
       tableEntitlements,
@@ -182,7 +182,7 @@ export class FormHelperService {
       let tableJson = JSON.parse(formMetadata.tableJson);
       let formFields: IFormFieldMetadata[] = formFieldsMetadata.filter(_ => _.formId === form.id);
 
-      const cellEntitlements = await this._getCellEntitlements(formMetadata.domainName, formMetadata.tableName, rowId, formFields);
+      const cellEntitlements = await this._getCellEntitlements(formMetadata.dataProduct, formMetadata.tableName, rowId, formFields);
 
       let parentChildLinkedColumns: {[columnName: string]: FormField[]} = {};
       let parentFieldsByColumn: {[columnName: string]: FormField} = {};
@@ -206,7 +206,7 @@ export class FormHelperService {
           formFields[i].columnId || null,
           formMetadata.tableId || null,
           formMetadata.tableName || null,
-          formMetadata.domainName || null,
+          formMetadata.dataProduct || null,
           formFields[i].columnName || null,
           formFields[i].columnType || null,
           formFields[i].overrideMandatory ? false : coerceBooleanProperty(formFields[i].columnIsMandatory),
@@ -222,7 +222,7 @@ export class FormHelperService {
           formFields[i].createLinkOptionName || null,
           formFields[i].linkTargetTableId || null,
           formFields[i].linkTargetTableName || null,
-          formFields[i].linkTableDomainName || null,
+          formFields[i].linkTableDataProductName || null,
           "#dddddd",
           formFields[i].choiceOptions || null,
           formMetadata.tableJson || null,
@@ -295,7 +295,7 @@ export class FormHelperService {
             childForm.populateSectionsFromFormMetadata(childFormSectionsMetadata);
 
             await this.fillWithFields(childForm, rowId, childFormMetadata, childFormFieldsMetadata, selectedLookupRecord, childTableEntitlements);
-            await this.fillWithData(childForm, rowId, selectedLookupRecord, formMetadata.tableName, formMetadata.domainName);
+            await this.fillWithData(childForm, rowId, selectedLookupRecord, formMetadata.tableName, formMetadata.dataProduct);
 
             // Override these, they will be checked later when opening up the child form
             cinchyColumn.canEdit = true;
@@ -308,7 +308,7 @@ export class FormHelperService {
 
               if (lastRecordId) {
               //  const childTableEntitlements = await this._cinchyService.getTableEntitlementsById(childFormMetadata.tableId).toPromise();
-                const childCellEntitlements: any = await this._getCellEntitlements(childFormMetadata.domainName, childFormMetadata.tableName, lastRecordId, childFormFieldsMetadata);
+                const childCellEntitlements: any = await this._getCellEntitlements(childFormMetadata.dataProduct, childFormMetadata.tableName, lastRecordId, childFormFieldsMetadata);
 
                 childForm.rowId = lastRecordId;
 
@@ -404,7 +404,7 @@ export class FormHelperService {
       targetRowId: number,
       selectedLookupRecord: ILookupRecord,
       parentTableName?: string,
-      parentDomainName?: string
+      parentDataProductName?: string
   ): Promise<boolean> {
 
     if (isNullOrUndefined(targetRowId)) {
@@ -418,11 +418,11 @@ export class FormHelperService {
     }
 
     try {
-      if (form.isChild && form.childFormParentId && form.childFormLinkId && parentDomainName && parentTableName) {
+      if (form.isChild && form.childFormParentId && form.childFormLinkId && parentDataProductName && parentTableName) {
         const queryToGetMatchIdFromParent: string = `
           SELECT
             ${form.childFormParentId} AS 'idParent'
-          FROM [${parentDomainName}].[${parentTableName}]
+          FROM [${parentDataProductName}].[${parentTableName}]
           WHERE [Cinchy ID] = ${targetRowId};`;
 
         let cinchyIdForMatchFromParentResp = (
@@ -479,7 +479,7 @@ export class FormHelperService {
 
 
   private async _getCellEntitlements(
-      domainName: string,
+      dataProduct: string,
       tableName: string,
       rowId: number,
       formFieldsMetadata: Array<IFormFieldMetadata>
@@ -502,7 +502,7 @@ export class FormHelperService {
     const query: string = `
       SELECT
         ${selectClause.toString()}
-      FROM [${domainName}].[${tableName}] t
+      FROM [${dataProduct}].[${tableName}] t
       WHERE t.[Deleted] IS NULL
         AND t.[Cinchy ID]=${rowId};`;
 
@@ -525,14 +525,14 @@ export class FormHelperService {
 
   private async _getFileName(rowId: number, fileNameColumn: string): Promise<string> {
 
-    const [domain, table, column] = fileNameColumn?.split(".") || [];
+    const [dataProduct, table, column] = fileNameColumn?.split(".") || [];
     const whereCondition: string = `WHERE [Cinchy ID] = ${rowId} AND [Deleted] IS NULL`;
 
-    if (domain) {
+    if (dataProduct) {
       const query: string = `SELECT [${column}] as 'fullName',
                        [Cinchy ID] as 'id'
                      FROM
-                       [${domain}].[${table}]
+                       [${dataProduct}].[${table}]
                        ${whereCondition};`;
 
       const fileNameResp = await this._cinchyService.executeCsql(query, null, null, QueryType.DRAFT_QUERY).toPromise();

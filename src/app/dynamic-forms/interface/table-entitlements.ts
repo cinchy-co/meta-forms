@@ -12,7 +12,7 @@ export interface ITableEntitlements {
   canDesignTable: boolean;
   canManageControls: boolean;
   columnEntitlements: Array<IColumnEntitlements>;
-  tableDomain: string;
+  tableDataProduct: string;
   tableGuid: string;
   tableId: number;
   tableName: string;

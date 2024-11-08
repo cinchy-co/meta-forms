@@ -175,7 +175,7 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
 
       let tableColumnQuery: string = `
         SELECT
-          tc.[Table].[Domain].[Name] AS 'Domain',
+          tc.[Table].[Data Product].[Name] AS 'DataProduct',
           tc.[Table].[Name] AS 'Table',
           tc.[Name] AS 'Column'
         FROM
@@ -379,7 +379,7 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
 
   getAndSetLatestFileValue(): void {
 
-    this._cinchyQueryService.getFilesInCell(this.field.cinchyColumn.name, this.field.cinchyColumn.domainName, this.field.cinchyColumn.tableName, this.form.rowId).subscribe((resp: Array<{ fileId: any, fileName: string }>) => {
+    this._cinchyQueryService.getFilesInCell(this.field.cinchyColumn.name, this.field.cinchyColumn.dataProduct, this.field.cinchyColumn.tableName, this.form.rowId).subscribe((resp: Array<{ fileId: any, fileName: string }>) => {
 
       if (resp?.length) {
         this.field.value = (this.field.value ?? []).concat(resp.map(x => x.fileId));
@@ -401,7 +401,7 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
         this._cinchyQueryService.updateFilesInCell(
             this.downloadableLinks.map(x => x.fileId),
             this.field.cinchyColumn.name,
-            this.field.cinchyColumn.domainName,
+            this.field.cinchyColumn.dataProduct,
             this.field.cinchyColumn.tableName,
             this.form.rowId
         ).subscribe(

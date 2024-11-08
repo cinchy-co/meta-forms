@@ -19,8 +19,8 @@ import { AppStateService } from "./app-state.service";
 })
 export class CinchyQueryService {
 
-  private readonly DOMAIN: string = "Cinchy Forms";
-  //private readonly DOMAIN: string = "Sandbox";
+  private readonly DATA_PRODUCT: string = "Cinchy Forms";
+  // private readonly DATA_PRODUCT: string = "Sandbox";
 
   private _formMetadataCache: { [formId: string] : IFormMetadata } = {};
   private _formSectionsMetadataCache: { [formId: string] : IFormSectionMetadata[] } = {};
@@ -45,13 +45,13 @@ export class CinchyQueryService {
   ) {}
 
 
-  getFilesInCell(columnName: string, domainName: string, tableName: string, rowId: number): Observable<Array<{ fileId: number, fileName: string }>> {
+  getFilesInCell(columnName: string, dataProduct: string, tableName: string, rowId: number): Observable<Array<{ fileId: number, fileName: string }>> {
 
     const query: string = `
       SELECT
         [${columnName}].[Cinchy ID] AS 'fileIds',
         [${columnName}].[File Name] AS 'fileNames'
-      FROM [${domainName}].[${tableName}]
+      FROM [${dataProduct}].[${tableName}]
       WHERE [Cinchy ID]=${rowId};`;
 
     return this._cinchyService.executeCsql(query, null).pipe(map(
@@ -91,7 +91,7 @@ export class CinchyQueryService {
       "@formId": id
     };
 
-    return this._cinchyService.executeQuery(this.DOMAIN, queryName, params).pipe(
+    return this._cinchyService.executeQuery(this.DATA_PRODUCT, queryName, params).pipe(
       map((response: { queryResult: Cinchy.QueryResult }): IFormMetadata => {
 
         const resultArray: Array<any> = response?.queryResult?.toObjectArray();
@@ -124,7 +124,7 @@ export class CinchyQueryService {
       "@formId": id
     };
 
-    return this._cinchyService.executeQuery(this.DOMAIN, query, params).pipe(
+    return this._cinchyService.executeQuery(this.DATA_PRODUCT, query, params).pipe(
       map((response: { queryResult: Cinchy.QueryResult }) => {
 
         return <IFormSectionMetadata[]>response?.queryResult?.toObjectArray();
@@ -154,7 +154,7 @@ export class CinchyQueryService {
       "@formId": id
     };
 
-    return this._cinchyService.executeQuery(this.DOMAIN, query, params).pipe(
+    return this._cinchyService.executeQuery(this.DATA_PRODUCT, query, params).pipe(
       map((response): Array<IFormFieldMetadata> => {
 
         return response?.queryResult?.toObjectArray() as Array<IFormFieldMetadata>;
@@ -173,7 +173,7 @@ export class CinchyQueryService {
   }
 
 
-  getLookupRecords(subtitleColumn: string, domain: string, table: string, lookupFilter?: string, limitResults?: boolean): Observable<ILookupRecord[]> {
+  getLookupRecords(subtitleColumn: string, dataProduct: string, table: string, lookupFilter?: string, limitResults?: boolean): Observable<ILookupRecord[]> {
 
     // If more than LOOKUP_RECORD_LABEL_COUNT records are retrieved, we know to indicate that additional records are available for the given filter.
     const selectStatement: string = limitResults ? `SELECT TOP ${CinchyQueryService.LOOKUP_RECORD_LABEL_COUNT + 1}` : `SELECT`;
@@ -183,7 +183,7 @@ export class CinchyQueryService {
       ${selectStatement}
         [Cinchy ID] as 'id',
         [${subCol}] as 'label'
-      FROM [${domain}].[${table}]
+      FROM [${dataProduct}].[${table}]
       WHERE [Deleted] IS NULL
         AND [${subCol}] IS NOT NULL
         AND trim(CAST([${subCol}] AS VARCHAR)) != ''
@@ -223,13 +223,13 @@ export class CinchyQueryService {
   }
 
 
-  updateFilesInCell(fileIds: number[], columnName: string, domainName: string, tableName: string, rowId: number): Observable<any> {
+  updateFilesInCell(fileIds: number[], columnName: string, dataProduct: string, tableName: string, rowId: number): Observable<any> {
 
     const ids: string = fileIds.length > 0 ? fileIds?.join(',1,') + ',1' : '';
     const query: string = `
       UPDATE t
       SET t.[${columnName}]='${ids}'
-      FROM [${domainName}].[${tableName}] t
+      FROM [${dataProduct}].[${tableName}] t
       WHERE [Deleted] IS NULL
         AND [Cinchy ID]=${rowId};`;
 
