@@ -1,16 +1,12 @@
 import { APP_INITIALIZER, NgModule } from "@angular/core";
-import { HttpClientModule } from "@angular/common/http";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatInputModule } from "@angular/material/input";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { CinchyConfig, CinchyModule, CinchyService } from "@cinchy-co/angular-sdk";
 
-import { AceEditorModule } from "ng2-ace-editor";
 import { NumeralModule } from "ngx-numeral";
 import { NgxSpinnerModule } from "ngx-spinner";
-import { ToastrModule } from "ngx-toastr";
 
 import { AppComponent } from "./app.component";
 
@@ -18,7 +14,8 @@ import { AppRoutingModule } from "./app-routing.module";
 import { CinchyDynamicFormsModule } from "./dynamic-forms/cinchy-dynamic-forms.module";
 import { CoreModule } from "./core/core.module";
 import { CustomMaterialModule } from "./custom-material.module";
-import { PagesModule } from "./pages/pages.module";
+
+import { FormWrapperComponent } from "./pages/form-wrapper/form-wrapper.component";
 
 import { ConfigService } from "./services/config.service";
 
@@ -35,57 +32,42 @@ export function getBaseUrl() {
 }
 
 
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    CoreModule,
-    PagesModule,
-    CustomMaterialModule,
-    CinchyDynamicFormsModule,
-    CinchyModule.forRoot(),
-    NgxSpinnerModule,
-    AceEditorModule,
-    MatDatepickerModule,
-    MatInputModule,
-    NumeralModule.forRoot(),
-    ToastrModule.forRoot({
-      closeButton: true,
-      enableHtml: true,
-      preventDuplicates: true,
-      tapToDismiss: false
-    })
-  ],
-  providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appLoadFactory,
-      deps: [ConfigService],
-      multi: true
-    },
-    CinchyModule,
-    CinchyService,
-    {
-      provide: CinchyConfig,
-      useFactory: (config: ConfigService) => {
-        return config.envConfig;
-      },
-      deps: [
-        ConfigService
-      ]
-    },
-    {
-      provide: "BASE_URL",
-      useFactory: getBaseUrl
-    },
-  ],
-  bootstrap: [
-    AppComponent
-  ]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        FormWrapperComponent
+    ],
+    bootstrap: [
+        AppComponent
+    ], imports: [AppRoutingModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        CoreModule,
+        CustomMaterialModule,
+        CinchyDynamicFormsModule,
+        CinchyModule.forRoot(),
+        NgxSpinnerModule,
+        NumeralModule.forRoot()], providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: appLoadFactory,
+            deps: [ConfigService],
+            multi: true
+        },
+        CinchyModule,
+        CinchyService,
+        {
+            provide: CinchyConfig,
+            useFactory: (config: ConfigService) => {
+                return config.envConfig;
+            },
+            deps: [
+                ConfigService
+            ]
+        },
+        {
+            provide: "BASE_URL",
+            useFactory: getBaseUrl
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {}

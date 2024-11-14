@@ -89,7 +89,7 @@ export class TextboxComponent implements OnChanges, OnInit {
         case DataFormatType.ImageUrlLarge:
 
           return "cinchy-images-large";
-        case DataFormatType.ImageUrlSmall:
+        case DataFormatType.ImageUrlMedium:
           // falls through
         case DataFormatType.ImageUrl:
 

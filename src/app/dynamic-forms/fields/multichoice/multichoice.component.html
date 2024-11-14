@@ -27,21 +27,18 @@
           (openedChange)="resetFilter()"
           (selectionChange)="valueChanged()">
         <mat-option>
-          <ngx-mat-select-search
-            class="multi-search"
-            [(ngModel)]="choiceFilter"
-            [ngModelOptions]="{ standalone: true }"
-            [showToggleAllCheckbox]="true"
-            (toggleAll)="toggleSelectAll($event)"
-            placeholderLabel="Search {{ field.label }}"
-            noEntriesFoundLabel="No entries matched your search">
+          <ngx-mat-select-search [formControl]="filterCtrl"
+                                 [showToggleAllCheckbox]="true"
+                                 (toggleAll)="toggleSelectAll($event)"
+                                 noEntriesFoundLabel="No entries matched your search"
+                                 placeholderLabel="Search...">
           </ngx-mat-select-search>
         </mat-option>
 
         <mat-option
-          *ngFor="let opt of options | filterBy: choiceFilter"
-          [value]="opt">
-          {{ opt }}
+          *ngFor="let option of displayOptions | async"
+          [value]="option">
+          {{ option }}
         </mat-option>
       </mat-select>
     </div>

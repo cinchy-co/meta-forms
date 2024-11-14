@@ -8,7 +8,7 @@ import { FormField } from "../../models/cinchy-form-field.model";
 
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 
-import * as moment from "moment";
+import moment from "moment";
 
 
 /**

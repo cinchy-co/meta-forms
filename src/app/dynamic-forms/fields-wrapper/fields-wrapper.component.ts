@@ -17,6 +17,8 @@ import { FormSection } from "../models/cinchy-form-section.model";
 import { AppStateService } from "../../services/app-state.service";
 
 import { isNullOrUndefined } from "util";
+import {coerceBooleanProperty} from "@angular/cdk/coercion";
+import {DataFormatType} from "../enums/data-format-type.enum";
 
 
 /**
@@ -87,19 +89,19 @@ export class FieldsWrapperComponent {
 
   usePlaintext(field: FormField): boolean {
 
-    return (field.cinchyColumn.dataType === "Text" && isNullOrUndefined(field.cinchyColumn.textFormat) && field.cinchyColumn.textColumnMaxLength <= 500)
+    return (field.cinchyColumn.dataType === "Text" && !this.useRichText(field) && field.cinchyColumn.textColumnMaxLength <= 500)
   }
 
 
   useRichText(field: FormField): boolean {
 
-    return (field.cinchyColumn.dataType === "Text" && !isNullOrUndefined(field.cinchyColumn.textFormat));
+    return (field.cinchyColumn.dataType === "Text" && !!(field.cinchyColumn.textFormat));
   }
 
 
   useTextarea(field: FormField): boolean {
 
-    return (field.cinchyColumn.dataType === "Text" && isNullOrUndefined(field.cinchyColumn.textFormat) && field.cinchyColumn.textColumnMaxLength > 500);
+    return (field.cinchyColumn.dataType === "Text" && !this.useRichText(field) && field.cinchyColumn.textColumnMaxLength > 500);
   }
 
 

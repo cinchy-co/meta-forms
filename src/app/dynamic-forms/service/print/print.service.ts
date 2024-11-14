@@ -23,13 +23,13 @@ import { NotificationService } from "../../../services/notification.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
 
-import pdfMake from "pdfmake/build/pdfmake";
+import pdfMake from "pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
-import * as moment from "moment/moment";
+import moment from "moment";
 
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.addVirtualFileSystem(pdfFonts);
 
 
 /**

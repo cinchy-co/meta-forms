@@ -21,7 +21,6 @@ $GREEN: green;
     color: $Primary_Color;
   }
 
-  .mat-checkbox-checked.mat-accent .mat-checkbox-background,
   .side-nav.have-brand, button.have-brand, .mat-drawer {
     background: $Primary_Color;
     color: $Secondary_Color;
@@ -42,14 +41,14 @@ $GREEN: green;
     background: transparent;
   }
 
-  button.btnMenu.mat-icon-button {
+  button.btnMenu.mat-mdc-icon-button {
     background-color: transparent;
     color: $Tertiary_Color;
     margin: auto 0;
   }
 
-  .mat-menu-content {
-    button.mat-menu-item:focus {
+  .mat-mdc-menu-content {
+    button.mat-mdc-menu-item:focus {
       outline: none;
     }
   }

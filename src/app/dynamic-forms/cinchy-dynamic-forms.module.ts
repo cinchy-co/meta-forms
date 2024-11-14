@@ -11,14 +11,10 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
+import { CodemirrorModule } from "@ctrl/ngx-codemirror";
+
 import { DigitOnlyModule } from "@uiowa/digit-only";
 
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
-
-import { AceEditorModule } from "ng2-ace-editor";
-
-import { FilterPipeModule } from "ngx-filter-pipe";
-import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { NgxSpinnerModule } from "ngx-spinner";
 
 import { CustomMaterialModule } from "../custom-material.module";
@@ -47,21 +43,7 @@ import { TextboxComponent } from "./fields/textbox/textbox.component";
 import { TextareaComponent } from "./fields/textarea/textarea.component";
 
 import { KeysPipe } from "./pipes/cinchy-column-key.pipe";
-
-
-import "ace-builds/webpack-resolver";
-import "brace";
-import "brace/index";
-import "brace/ext/language_tools";
-import "brace/snippets/text";
-import "brace/snippets/html";
-import "brace/snippets/javascript";
-import "brace/snippets/json";
-import "brace/snippets/sql";
-import "brace/snippets/sqlserver";
-import "brace/snippets/xml";
-
-window["ace"]["require"] = window["ace"]["acequire"];
+import {NgxMatSelectSearchModule} from "ngx-mat-select-search";
 
 
 @NgModule({
@@ -89,21 +71,19 @@ window["ace"]["require"] = window["ace"]["acequire"];
   ],
   imports: [
     CinchyModule.forRoot(),
-    AceEditorModule,
-    AngularMultiSelectModule,
     BrowserAnimationsModule,
     BrowserModule,
     CustomMaterialModule,
     DigitOnlyModule,
-    FilterPipeModule,
     FontAwesomeModule,
     FormsModule,
     NgbModule,
-    NgxMatSelectSearchModule,
     NgxSpinnerModule,
     ReactiveFormsModule,
     ScrollingModule,
-    SharedModule
+    SharedModule,
+    CodemirrorModule,
+    NgxMatSelectSearchModule
   ],
   exports: [
     CinchyDynamicFormsComponent

@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 
 import { coerceBooleanProperty } from "@angular/cdk/coercion";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 
 import { CinchyColumn } from "./cinchy-column.model";
 import { Form } from "./cinchy-form.model";
@@ -18,7 +18,7 @@ import { isNullOrUndefined } from "util";
 export class FormField {
 
   // TODO: are these fields necessary?
-  formControl: FormControl;
+  formControl: UntypedFormControl;
   filteredValues: Observable<DropdownOption[]>;
 
   hide: boolean = false;
@@ -55,7 +55,7 @@ export class FormField {
   ) {
 
     if (cinchyColumn.dataType === "Link" && dropdownDataset) {
-      this.formControl = new FormControl(null);
+      this.formControl = new UntypedFormControl(null);
       this.filteredValues = this.formControl.valueChanges.pipe(startWith(""), map(value => this._filter(value)));
     }
 

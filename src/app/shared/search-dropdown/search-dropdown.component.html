@@ -1,17 +1,21 @@
 <mat-form-field class="search-dropdown" appearance="outline">
   <mat-label>Search Records</mat-label>
+
   <mat-select [(ngModel)]="selectedRecordId"
               (ngModelChange)="onSelect()"
               panelClass="fix-width-470">
     <mat-option>
       <ngx-mat-select-search [formControl]="filterCtrl"
+                             noEntriesFoundLabel="No entries matched your search"
                              placeholderLabel="Search...">
       </ngx-mat-select-search>
     </mat-option>
+
     <mat-option *ngFor="let item of displayItems" [value]="item.id" [title]="item.label" [disabled]="item.id === -1">
       {{ item.label }}
     </mat-option>
-    <mat-option *ngIf="hasAdditionalRecords" disabled>
+
+    <mat-option *ngIf="hasAdditionalRecords" [disabled]="true">
       Refine your search to see other options
     </mat-option>
   </mat-select>

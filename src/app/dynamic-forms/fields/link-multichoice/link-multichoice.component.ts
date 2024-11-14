@@ -1,5 +1,5 @@
 import { BehaviorSubject, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { debounceTime, takeUntil } from "rxjs/operators";
 
 import {
   Component,
@@ -78,7 +78,7 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
 
   DROPDOWN_OPTION_SIZE = 42;
 
-  multiFilterCtrl: FormControl = new FormControl();
+  filterCtrl: FormControl<string> = new FormControl();
 
   selectedValues = [];
 
@@ -305,32 +305,6 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
   }
 
 
-  protected filterMulti(): void {
-
-    if (this.dropdownSetOptions) {
-      // get the search keyword
-      let search = this.multiFilterCtrl.value;
-
-      if (!search) {
-        this.filteredListMulti.next(this.dropdownSetOptions);
-      }
-      else {
-        search = search.toLowerCase();
-
-        // filter the list
-        this.filteredListMulti.next(
-          this.dropdownSetOptions.filter(
-            (item: DropdownOption) => {
-
-              return ((item.displayOnlyLabel || item.label)?.toString().toLowerCase().indexOf(search) > -1)
-            }
-          )
-        );
-      }
-    }
-  }
-
-
   generateMultipleOptionsFromSingle(): Array<DropdownOption> {
 
     if (this.field.dropdownDataset?.options?.length) {
@@ -515,11 +489,14 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
       this.charactersAfterWhichToShowList = 2;
     }
 
-    this.multiFilterCtrl.valueChanges
-      .pipe(takeUntil(this.onDestroy))
+    this.filterCtrl.valueChanges
+      .pipe(
+        debounceTime(100),
+        takeUntil(this.onDestroy)
+      )
       .subscribe(() => {
 
-        this.filterMulti();
+        this._filter();
       });
   }
 
@@ -552,6 +529,32 @@ export class LinkMultichoiceComponent implements OnChanges, OnDestroy, OnInit {
       targetColumnName: this.field.cinchyColumn.name,
       targetTableName: this.targetTableName
     });
+  }
+
+
+  private _filter(): void {
+
+    if (this.dropdownSetOptions) {
+      // get the search keyword
+      let search = this.filterCtrl.value;
+
+      if (!search) {
+        this.filteredListMulti.next(this.dropdownSetOptions);
+      }
+      else {
+        search = search.toLowerCase();
+
+        // filter the list
+        this.filteredListMulti.next(
+          this.dropdownSetOptions.filter(
+            (item: DropdownOption) => {
+
+              return ((item.displayOnlyLabel || item.label)?.toString().toLowerCase().indexOf(search) > -1)
+            }
+          )
+        );
+      }
+    }
   }
 
 

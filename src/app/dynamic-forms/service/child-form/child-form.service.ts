@@ -35,22 +35,10 @@ export class ChildFormService {
    */
   getAllFields(childForm: Form): Array<FormField> {
 
-    // TODO: this can be done using return flatMap when ES2019 is available (typescript ^4.5, angular ^14.0.7)
-    const output = new Array<FormField>();
+    return childForm.sections.flatMap((section: FormSection) => {
 
-    childForm?.sections.forEach((section: FormSection) => {
-
-      output.push(...section.fields);
+      return section.fields;
     });
-
-    return output;
-
-    /*
-      return childForm.sections.flatMap((section: FormSection) => {
-
-        return section.fields;
-      });
-    */
   }
 
 

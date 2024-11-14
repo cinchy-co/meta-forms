@@ -61,7 +61,7 @@ export class SearchDropdownComponent implements AfterViewInit, OnChanges, OnDest
   /**
    * Form control for the filter string
    */
-  filterCtrl: FormControl = new FormControl();
+  filterCtrl: FormControl<string> = new FormControl();
 
 
   faSearch = faSearch;
@@ -88,7 +88,7 @@ export class SearchDropdownComponent implements AfterViewInit, OnChanges, OnDest
   }
 
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
 
     // listen for search field value changes
     this._subscription.add(

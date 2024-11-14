@@ -1,14 +1,18 @@
 :host ::ng-deep {
-  .mat-select-arrow-wrapper {
-    visibility: hidden;
+  mat-form-field {
+    width: 470px;
   }
 
-  mat-form-field {
-      width: 470px;
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
 
-      .mat-form-field-infix {
-          margin: -5.5px auto;
-      }
+  .mat-mdc-select-arrow-wrapper {
+    visibility: hidden;
   }
 }
 
+.search-input-icon {
+  position: relative;
+  left: -0.75rem;
+}

@@ -1,5 +1,7 @@
 @import "global-styles/variables";
-@import '~ngx-toastr/toastr.css';
+
+@import "codemirror/lib/codemirror.css";
+@import "codemirror/theme/idea.css";
 
 
 // COMMON STYLES
@@ -130,20 +132,6 @@ mat-spinner {
   margin: 20px auto;
 }
 
-:host ::ng-deep {
-  .mat-form-field-appearance-legacy .mat-form-field-underline {
-    display: none !important;
-  }
-}
-
-.mat-form-field-appearance-legacy .mat-form-field-underline {
-  display: none !important;
-}
-
-.mat-form-field-flex {
-    align-items: center !important;
-}
-
 .selected-list .c-list .c-token .c-label,
 .pure-checkbox input[type="checkbox"] + label {
   font-size: 12px;
@@ -155,6 +143,7 @@ mat-spinner {
 
 .table-url {
   color: rgba(71, 38, 155, 1);
+  text-decoration: none;
 }
 
 // SPACING CSS
@@ -322,7 +311,7 @@ app-fields-wrapper {
   }
 }
 
-.mat-spinner.inside {
+.mat-mdc-progress-spinner.inside {
   animation: none !important;
 }
 
@@ -448,23 +437,28 @@ app-fields-wrapper {
   border: 0;
 }
 
-.toast-container .ngx-toastr {
+.snack {
   padding: 15px;
   width: 360px;
 
-  &.toast-error {
-    background-image: none;
+  .mat-mdc-button:not(:disabled) {
+    color: white !important;
   }
 
-  &.toast-info {
-    background-image: none;
+  // Colours from ngx-toastr
+  &.snack-error .mdc-snackbar__surface {
+    background-color: #BD362F;
   }
 
-  &.toast-success {
-    background-image: none;
+  &.snack-info .mdc-snackbar__surface {
+    background-color: #2F96B4;
   }
 
-  &.toast-warning {
-    background-image: none;
+  &.snack-success .mdc-snackbar__surface {
+    background-color: #51A351;
+  }
+
+  &.snack-warning .mdc-snackbar__surface {
+    background-color: #F89406;
   }
 }

@@ -25,9 +25,12 @@
               (blur)="valueChanged()">
          </textarea>
 
-    <ace-editor *ngIf="isFormatted" #editor style="height:450px;" [(text)]="value"
-                (textChange)="valueChanged()">
-    </ace-editor>
+    <ngx-codemirror *ngIf="isFormatted && showEditor"
+                    [(ngModel)]="value"
+                    [options]="codeEditorOptions"
+                    (ngModelChange)="valueChanged()"
+    ></ngx-codemirror>
+
     <mat-error *ngIf="showError && field.cinchyColumn.isMandatory && !value">
       *{{field.label}} is Required.
     </mat-error>
@@ -36,9 +39,7 @@
   <ng-container *ngIf="!canEdit">
     <label class="pre-formatted" *ngIf="!isFormatted && showActualField" [innerHTML]="value || '-'"></label>
 
-    <ace-editor *ngIf="isFormatted" #editor style="height:450px;" [(text)]="value"
-                (textChange)="valueChanged()">
-    </ace-editor>
+    <ngx-codemirror *ngIf="isFormatted && showEditor" [(ngModel)]="value" [options]="codeEditorOptions"></ngx-codemirror>
   </ng-container>
 
   <ng-container *ngIf="showImage">
@@ -54,11 +55,11 @@
   <ng-container *ngIf="showIframe && isValidHttpUrl(value)">
     <iframe class="iframe-control" [src]="urlSafe" [style.height.px]="iframeHeightStyle"></iframe>
   </ng-container>
-  
+
   <ng-container *ngIf="showIframeSandbox && isValidHttpUrl(value)">
     <iframe class="iframe-control" sandbox="allow-forms allow-scripts allow-modals allow-popups allow-same-origin" [src]="urlSafe" [style.height.px]="iframeHeightStyle"></iframe>
   </ng-container>
-   
+
   <ng-container *ngIf="showIframeSandboxStrict && isValidHttpUrl(value)">
     <iframe class="iframe-control" sandbox="allow-forms allow-scripts allow-modals allow-popups" [src]="urlSafe" [style.height.px]="iframeHeightStyle"></iframe>
   </ng-container>

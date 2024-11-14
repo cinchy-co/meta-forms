@@ -174,11 +174,7 @@ export class DropdownDatasetService {
       }
       else {
         this._notificationService.displayErrorMessage(
-<<<<<<< HEAD
           `Could not retrieve linked options for [${metadataQueryResult[0]["dataProduct"]}].[${metadataQueryResult[0]["table"]}]. ${this._errorService.getErrorMessage(error)}`
-=======
-          `Could not retrieve linked options for [${metadataQueryResult[0]["Domain"]}].[${metadataQueryResult[0]["Table"]}]. ${this._errorService.getErrorMessage(error)}`
->>>>>>> master
         );
       }
     }

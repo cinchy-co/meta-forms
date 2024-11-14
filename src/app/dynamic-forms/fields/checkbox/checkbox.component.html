@@ -7,12 +7,11 @@
          [id]="field.label"
          (change)="valueChanged()" />
   <div class="checkbox-field">
-
-    &nbsp;
     <label class="pre-formatted" [for]="field.label" [title]="field.caption || ''">
       {{field.label}}
       {{(field.cinchyColumn.isMandatory && !field.hasValue) ? '*' : ''}}
     </label>
+
     <mat-icon *ngIf="field.caption" class="info-icon-checkbox"
               ngbTooltip="{{field.caption}}"
               placement="auto"

@@ -31,10 +31,6 @@
   width: 100%;
   padding-left: 10px;
   padding-right: 10px;
-
-  .mat-form-field-wrapper {
-    padding-bottom: 0;
-  }
 }
 
 .header {
@@ -113,13 +109,6 @@
   text-align: center
 }
 
-.ChoiceFilter {
-  width: 100%;
-  padding: 10px;
-  border-bottom: 1px solid gray;
-  margin-bottom: 20px;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -170,7 +159,7 @@
 }
 
 
-.mat-input-element {
+.mat-mdc-input-element {
   display: block;
   width: 100%;
   padding: .375rem .75rem;
@@ -188,18 +177,6 @@
   border-bottom: 1px solid gray;
 }
 
-//Remove Default underline
-
-/* To remove the default underline */
-.mat-input-underline.mat-form-field-underline {
-  background: transparent;
-}
-
-/* To remove the underline ripple */
-.mat-input-ripple.mat-form-field-ripple {
-  background-color: transparent;
-}
-
 .child-table th, .child-table td {
   border-bottom: 1px solid gray;
 }
@@ -207,11 +184,6 @@
 .child-table th {
   border-top: 1px solid gray;
 }
-
-.mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
-  background-color: gray;
-}
-
 
 .form-control:focus {
   border-color: #434343;
@@ -222,18 +194,6 @@
 mat-panel-title.mat-expansion-panel-header-title {
   color: black;
 }
-
-
-/*
-.mat-form-field-appearance-legacy .mat-form-field-underline,
-.mat-form-field-appearance-legacy .mat-form-field-ripple,
-.mat-form-field-appearance-legacy.mat-focused
-.mat-form-field-underline,
-.mat-form-field-appearance-legacy.mat-focused
-.mat-form-field-ripple {
-  background-color: inherit;
-}
-*/
 
 .table-responsive {
   width: 100%;
@@ -251,20 +211,13 @@ article label {
   margin-bottom: 8px;
 }
 
-.mat-dialog-title {
+.mat-mdc-dialog-title {
   margin: 0 0 5px;
 }
 
-.mat-dialog-actions {
+div.mat-mdc-dialog-actions {
   justify-content: flex-end;
-  padding-top: 10px;
-  padding-bottom: 24px;
-}
-
-.mat-checkbox-layout .mat-checkbox-label {
-  line-height: 24px;
-  color: rgba(0, 0, 0, .54);
-  font-size: 13px;
+  padding: 10px 24px 24px;
 }
 
 .checkBoxMargin {
@@ -289,15 +242,11 @@ article label {
   font-size: 18px;
 }
 
-.mat-checkbox label {
+.mat-mdc-checkbox label {
   margin-bottom: 0px;
 }
 
-.mat-card {
-  padding-bottom: 0px;
-}
-
-.mat-input-element:focus {
+.mat-mdc-input-element:focus {
   // outline: none;
   border-width: 1.5px;
   border-color: #434343
@@ -325,15 +274,6 @@ article label {
   font-size: 14px;
 }
 
-.mat-dialog-content {
-  /*
-   * Removes phantom scrollbars
-   *
-   * https://github.com/angular/components/issues/20344
-   */
-  padding: 2px 24px !important;
-}
-
 .formMainDiv {
   background-color: #f1f1f1;
   display: flow-root;
@@ -342,10 +282,12 @@ article label {
 .cinchy-label {
   color: rgba(0, 0, 0, .54);
   font-size: 13px;
+  margin-bottom: .5rem;
 }
 
 
 .mat-card-header-child {
+  display: inline;
   margin: 0em 0 0.5em 0;
   font-weight: normal;
   position: relative;
@@ -360,7 +302,7 @@ article label {
   font-family: 'Muli', sans-serif;
 }
 
-button.btnSave.mat-raised-button {
+button.btnSave.mat-mdc-raised-button {
   margin-right: 10px;
   height: 40px;
 
@@ -387,10 +329,6 @@ button.btnSave.mat-raised-button {
 
   .mat-expansion-panel-body {
     padding-top: 20px;
-  }
-
-  .mat-form-field-wrapper {
-    padding-bottom: 0;
   }
 }
 
@@ -461,7 +399,7 @@ button.btnSave.mat-raised-button {
   padding: 5px 20px;
 }
 
-.mat-select-disabled, .mat-select-disabled:hover, .mat-select-disabled:focus {
+.mat-mdc-select-disabled, .mat-mdc-select-disabled:hover, .mat-mdc-select-disabled:focus {
   background-color: #e9ecef;
   opacity: 1;
 
@@ -470,7 +408,7 @@ button.btnSave.mat-raised-button {
   }
 }
 
-.mat-select-panel {
+.mat-mdc-select-panel {
     max-width: 100% !important;
 }
 
@@ -510,7 +448,7 @@ button.btnSave.mat-raised-button {
   margin-top: 5px;
 }
 
-.mat-form-field-prefix .mat-icon-button,
+.mat-form-field-prefix .mat-mdc-icon-button,
 .mat-form-field-suffix .mat-icon-button {
   height: 2em;
   width: 2.5em !important;

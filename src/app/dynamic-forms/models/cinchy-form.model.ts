@@ -16,7 +16,7 @@ import { DropdownOption } from "../service/cinchy-dropdown-dataset/cinchy-dropdo
 
 import { isNullOrUndefined } from "util";
 
-import * as moment from "moment";
+import moment from "moment";
 import * as R from "ramda";
 
 

@@ -1,6 +1,7 @@
 ﻿import { Injectable } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
-import { ToastrService } from "ngx-toastr";
+import { DEFAULT_SNACKBAR_CONFIG } from "../constants/default-snackbar-config.constant";
 
 
 @Injectable({
@@ -8,73 +9,83 @@ import { ToastrService } from "ngx-toastr";
 })
 export class NotificationService {
 
-  private static readonly _DEFAULT_TIMEOUT: number = 5000;
-  private static readonly _DEFAULT_EXTENDED_TIMEOUT: number = 5000;
+  private static readonly _DEFAULT_DURATION: number = 5000;
 
 
   constructor(
-    private _toastrService: ToastrService
+    private _snack: MatSnackBar
   ) {}
 
+  // Options from ngx-toastr
+  /*
+      closeButton: true,
+      enableHtml: true,
+      preventDuplicates: true,
+      tapToDismiss: false
+   */
 
   /**
-   * Displays the given error message as a toast. Error notifications must be manually dismissed.
+   * Displays the given error message as a snack. Error notifications must be manually dismissed.
    */
-  displayErrorMessage(message: string, title: string = "Error"): void {
+  displayErrorMessage(message: string, action: string = "dismiss"): void {
 
-    this._toastrService.error(
+    this._snack.open(
       `${message}`,
-      title,
+      action,
       {
-        disableTimeOut: true
+        ...DEFAULT_SNACKBAR_CONFIG,
+        panelClass: ["snack", "snack-error"]
       }
     );
   }
 
 
   /**
-   * Displays the given info message as a toast
+   * Displays the given info message as a snack
    */
-  displayInfoMessage(message: string, title: string = "Info", timeout?: number): void {
+  displayInfoMessage(message: string, action: string = "OK", duration?: number): void {
 
-    this._toastrService.info(
+    this._snack.open(
       `${message}`,
-      title,
+      action,
       {
-        timeOut: timeout || NotificationService._DEFAULT_TIMEOUT,
-        extendedTimeOut: timeout || NotificationService._DEFAULT_EXTENDED_TIMEOUT
+        ...DEFAULT_SNACKBAR_CONFIG,
+        panelClass: ["snack", "snack-info"],
+        duration: duration || NotificationService._DEFAULT_DURATION
       }
     );
   }
 
 
   /**
-   * Displays the given success message as a toast
+   * Displays the given success message as a snack
    */
-  displaySuccessMessage(message: string, title: string = "Success", timeout?: number): void {
+  displaySuccessMessage(message: string, action: string = "OK", duration?: number): void {
 
-    this._toastrService.success(
+    this._snack.open(
       `${message}`,
-      title,
+      action,
       {
-        timeOut: timeout || NotificationService._DEFAULT_TIMEOUT,
-        extendedTimeOut: timeout || NotificationService._DEFAULT_EXTENDED_TIMEOUT
+        ...DEFAULT_SNACKBAR_CONFIG,
+        panelClass: ["snack", "snack-success"],
+        duration: duration || NotificationService._DEFAULT_DURATION
       }
     );
   }
 
 
   /**
-   * Displays the given warning message as a toast
+   * Displays the given warning message as a snack
    */
-  displayWarningMessage(message: string, title: string = "Warning", timeout?: number): void {
+  displayWarningMessage(message: string, action: string = "dismiss", duration?: number): void {
 
-    this._toastrService.warning(
+    this._snack.open(
       `${message}`,
-      title,
+      action,
       {
-        timeOut: timeout || NotificationService._DEFAULT_TIMEOUT,
-        extendedTimeOut: timeout || NotificationService._DEFAULT_EXTENDED_TIMEOUT
+        ...DEFAULT_SNACKBAR_CONFIG,
+        panelClass: ["snack", "snack-warning"],
+        duration: duration || NotificationService._DEFAULT_DURATION
       }
     );
   }

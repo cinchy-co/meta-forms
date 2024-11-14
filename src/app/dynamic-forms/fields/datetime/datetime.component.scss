@@ -13,7 +13,7 @@
       }
     }
 
-    ::ng-deep .mat-icon-button {
+    ::ng-deep .mat-mdc-icon-button {
       height: 33px;
       line-height: 33px;
       width: 33px;
@@ -26,9 +26,4 @@
   width: 0;
   visibility: hidden;
   display: block !important;
-}
-
-.mat-form-field-appearance-legacy .mat-form-field-prefix .mat-datepicker-toggle-default-icon,
-.mat-form-field-appearance-legacy .mat-form-field-suffix .mat-datepicker-toggle-default-icon {
-  width: 2rem !important;
 }
